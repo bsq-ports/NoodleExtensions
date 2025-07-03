@@ -113,13 +113,14 @@ MAKE_HOOK_MATCH(BeatmapCallbacksUpdater_LateUpdate, &BeatmapCallbacksUpdater::La
     return BeatmapCallbacksUpdater_LateUpdate(self);
   }
 
-  if (controller != selfController || selfController->_beatmapData != beatmapData) {
+  auto beatmapOpt = il2cpp_utils::try_cast<CustomJSONData::CustomBeatmapData>(selfController->_beatmapData);
+  if (beatmapOpt && controller != selfController || selfController->_beatmapData != beatmapData) {
+
     CJDLogger::Logger.fmtLog<Paper::LogLevel::INF>("Using noodle sorted node");
     controller = selfController;
     beatmapData = selfController->_beatmapData;
 
-    auto beatmap = il2cpp_utils::cast<CustomJSONData::CustomBeatmapData>(selfController->_beatmapData);
-    auto items = SortAndOrderList(beatmap);
+    auto items = SortAndOrderList(beatmapOpt.value());
 
     auto first = items->get_First();
     CustomJSONData::CustomEventCallbacks::firstNode.emplace(first);

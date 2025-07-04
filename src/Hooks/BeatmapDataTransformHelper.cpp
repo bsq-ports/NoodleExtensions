@@ -93,18 +93,20 @@ void LoadNoodleObjects(CustomJSONData::CustomBeatmapData* beatmap) {
   }
 
   for (BeatmapObjectData* beatmapObjectData : beatmap->beatmapObjectDatas) {
-    CustomJSONData::CustomNoteData* noteData = nullptr;
-    CustomJSONData::CustomObstacleData* obstacleData = nullptr;
-    CustomJSONData::CustomSliderData* sliderData = nullptr;
+    CustomJSONData::CustomNoteData* noteData =
+        il2cpp_utils::try_cast<CustomJSONData::CustomNoteData>(beatmapObjectData).value_or(nullptr);
+    CustomJSONData::CustomObstacleData* obstacleData =
+        il2cpp_utils::try_cast<CustomJSONData::CustomObstacleData>(beatmapObjectData).value_or(nullptr);
+    CustomJSONData::CustomSliderData* sliderData =
+        il2cpp_utils::try_cast<CustomJSONData::CustomSliderData>(beatmapObjectData).value_or(nullptr);
     CustomJSONData::JSONWrapper* customDataWrapper = nullptr;
-    if (beatmapObjectData->klass == customObstacleDataClass) {
-      obstacleData = (CustomJSONData::CustomObstacleData*)beatmapObjectData;
+    if (obstacleData) {
       customDataWrapper = obstacleData->customData;
-    } else if (beatmapObjectData->klass == customNoteDataClass) {
-      noteData = (CustomJSONData::CustomNoteData*)beatmapObjectData;
+    }
+    if (noteData) {
       customDataWrapper = noteData->customData;
-    } else if (beatmapObjectData->klass == customSliderDataClass) {
-      sliderData = (CustomJSONData::CustomSliderData*)beatmapObjectData;
+    }
+    if (sliderData) {
       customDataWrapper = sliderData->customData;
     }
 
@@ -169,9 +171,12 @@ void LoadNoodleEvent(TracksAD::BeatmapAssociatedData& beatmapAD, CustomJSONData:
         eventData[v2 ? NoodleExtensions::Constants::V2_TRACK.data() : NoodleExtensions::Constants::TRACK.data()]
             .GetString());
     std::string_view trackTarget(
-        NEJSON::ReadOptionalString(eventData, v2 ? NoodleExtensions::Constants::V2_TARGET.data() : NoodleExtensions::Constants::TARGET.data()).value_or("Root"));
+        NEJSON::ReadOptionalString(eventData, v2 ? NoodleExtensions::Constants::V2_TARGET.data()
+                                                 : NoodleExtensions::Constants::TARGET.data())
+            .value_or("Root"));
     TrackW track = beatmapAD.getTrack(trackName);
-    NELogger::Logger.debug("Assigning player to track {} at {}, with target {}", trackName.data(), fmt::ptr(track), trackTarget.data());
+    NELogger::Logger.debug("Assigning player to track {} at {}, with target {}", trackName.data(), fmt::ptr(track),
+                           trackTarget.data());
     eventAD.playerTrackEventData.emplace(track, trackTarget);
 
     NECaches::hasPlayerTransfrom = true;
@@ -202,9 +207,9 @@ MAKE_HOOK_MATCH(BeatmapDataTransformHelper_CreateTransformedBeatmapData,
                 ::GlobalNamespace::EnvironmentEffectsFilterPreset environmentEffectsFilterPreset,
                 ::GlobalNamespace::EnvironmentIntensityReductionOptions* environmentIntensityReductionOptions,
                 ::ByRef<::BeatSaber::Settings::Settings> settings) {
-  auto result = BeatmapDataTransformHelper_CreateTransformedBeatmapData(
-      beatmapData, beatmapLevel, gameplayModifiers, leftHanded, environmentEffectsFilterPreset,
-      environmentIntensityReductionOptions, settings);
+  auto result = BeatmapDataTransformHelper_CreateTransformedBeatmapData(beatmapData, beatmapLevel, gameplayModifiers,
+                                                                        leftHanded, environmentEffectsFilterPreset,
+                                                                        environmentIntensityReductionOptions, settings);
 
   if (!Hooks::isNoodleHookEnabled()) return result;
 
@@ -222,11 +227,12 @@ MAKE_HOOK_MATCH(BeatmapDataTransformHelper_CreateTransformedBeatmapData,
     auto customData = customBeatmap.value()->customData;
     if (customData != nullptr) {
       if (customData->value.has_value()) {
-        auto localSpaceTrail = NEJSON::ReadOptionalBool(customData->value.value(), NoodleExtensions::Constants::TRAIL_LOCAL_SPACE);
+        auto localSpaceTrail =
+            NEJSON::ReadOptionalBool(customData->value.value(), NoodleExtensions::Constants::TRAIL_LOCAL_SPACE);
         if (localSpaceTrail.has_value()) {
           NECaches::hasLocalSpaceTrail = localSpaceTrail.value();
         }
-      } 
+      }
     }
   }
 
@@ -270,8 +276,8 @@ void HandleFakeObjects(SongCore::CustomJSONData::CustomLevelInfoSaveDataV2*, std
 }
 
 void InstallBeatmapDataTransformHelperHooks() {
-  //Modloader::requireMod("CustomJSONData");
-  // RuntimeSongLoader::API::AddBeatmapDataBasicInfoLoadedEvent(HandleFakeObjects);
+  // Modloader::requireMod("CustomJSONData");
+  //  RuntimeSongLoader::API::AddBeatmapDataBasicInfoLoadedEvent(HandleFakeObjects);
 
   INSTALL_HOOK(NELogger::Logger, BeatmapDataTransformHelper_CreateTransformedBeatmapData);
 }

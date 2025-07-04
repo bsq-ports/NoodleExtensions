@@ -48,7 +48,7 @@ void CustomEventCallback(BeatmapCallbacksController* callbackController,
       // fail safe, idek why this needs to be done smh
       // CJD you bugger
       if (!ad.parsed) {
-        auto* customBeatmapData = (CustomJSONData::CustomBeatmapData*)callbackController->_beatmapData;
+        auto* customBeatmapData = il2cpp_utils::cast<CustomJSONData::CustomBeatmapData>(callbackController->_beatmapData);
         TracksAD::BeatmapAssociatedData& beatmapAD = TracksAD::getBeatmapAD(customBeatmapData->customData);
         auto v2 = customBeatmapData->v2orEarlier;
         LoadNoodleEvent(beatmapAD, customEventData, v2);

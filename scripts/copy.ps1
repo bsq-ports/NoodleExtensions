@@ -5,13 +5,8 @@ param(
     [switch]$release = $false
 )
 
-if ($release) {
-    & $PSScriptRoot/build.ps1 -release
-} else {
-    & $PSScriptRoot/build.ps1
-}
 if ($?) {
-    adb push build/libchroma.so /sdcard/ModData/com.beatgames.beatsaber/Modloader/mods/libchroma.so
+    adb push build/libnoodleextensions.so /sdcard/ModData/com.beatgames.beatsaber/Modloader/mods/libnoodleextensions.so
     if ($?) {
         adb shell am force-stop com.beatgames.beatsaber
         adb shell am start com.beatgames.beatsaber/com.unity3d.player.UnityPlayerActivity

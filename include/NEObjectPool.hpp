@@ -5,18 +5,23 @@
 #include <list>
 #include "Animation/NoodleMovementDataProvider.hpp"
 #include "GlobalNamespace/BeatmapObjectData.hpp"
+#include "NELogger.h"
 
 namespace NoodleExtensions::Pool {
 
 class NoodleMovementDataProviderPool {
  private:
-  std::vector<SafePtr<NoodleMovementDataProvider>> free;
+  std::vector<SafePtr<NoodleMovementDataProvider>> free = {};
 
  public:
   NoodleMovementDataProviderPool(int count) : free() {
     for (int i = 0; i < count; ++i) {
+      NELogger::Logger.info("hi");
       put(NoodleMovementDataProvider::New_ctor());
     }
+  }
+  ~NoodleMovementDataProviderPool() {
+    free.clear();
   }
 
   NoodleMovementDataProvider* get(GlobalNamespace::BeatmapObjectData* beatmapObjectData) {

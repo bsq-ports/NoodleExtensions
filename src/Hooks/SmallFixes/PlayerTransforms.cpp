@@ -38,6 +38,11 @@ MAKE_HOOK_MATCH(PlayerTransforms_HeadsetOffsetZ, &PlayerTransforms::Update, void
     return;
   }
 
+  if (!_parentTransform) {
+    _parentTransform = self->_originParentTransform;
+    // _noodlePlayerTransformManager.Active ? _noodlePlayerTransformManager.Head : originParentTransform;
+  }
+
   self->_headPseudoLocalZOnlyPos = Sombrero::FastVector3(_parentTransform->forward) *
                                    HeadOffsetZ(self->_headPseudoLocalPos, self->_originParentTransform);
 }

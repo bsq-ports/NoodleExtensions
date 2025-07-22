@@ -30,7 +30,6 @@ BeatmapObjectSpawnController* beatmapObjectSpawnController;
 MAKE_HOOK_MATCH(BeatmapObjectSpawnController_Start, &BeatmapObjectSpawnController::Start, void,
                 BeatmapObjectSpawnController* self) {
   beatmapObjectSpawnController = self;
-  NECaches::beatmapObjectSpawnController = self;
   BeatmapObjectSpawnController_Start(self);
 }
 
@@ -134,7 +133,7 @@ MAKE_HOOK_MATCH(GetJumpingNoteSpawnData, &BeatmapObjectSpawnMovementData::GetJum
   BeatmapObjectAssociatedData& ad = getAD(noteData->customData);
 
   float offset = self->noteLinesCount / 2.0f;
-  
+
   auto const flipLineIndex = ad.flipX;
 
   bool const gravityOverride = ad.objectData.disableNoteGravity.value_or(false);

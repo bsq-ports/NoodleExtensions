@@ -3,9 +3,11 @@
 #include "GlobalNamespace/BeatmapObjectSpawnController.hpp"
 #include "GlobalNamespace/IJumpOffsetYProvider.hpp"
 #include "GlobalNamespace/VariableMovementDataProvider.hpp"
+#include "NEObjectPool.hpp"
 #include "Zenject/DiContainer.hpp"
 #include "sombrero/shared/ColorUtils.hpp"
 #include "custom-json-data/shared/CustomBeatmapData.h"
+#include <memory>
 
 #pragma once
 
@@ -37,8 +39,9 @@ public:
   static SafePtr<GlobalNamespace::BeatmapObjectSpawnController> beatmapObjectSpawnController;
   static SafePtr<CustomJSONData::CustomBeatmapData> customBeatmapData;
   static GlobalNamespace::BeatmapObjectSpawnMovementData::NoteJumpValueType noteJumpValueType;
+  static std::shared_ptr<NoodleExtensions::Pool::NoodleMovementDataProviderPool> noodleMovementDataProviderPool;
   static float noteJumpValue;
-  
+
   static bool hasLocalSpaceTrail;
   static bool hasPlayerTransfrom;
 

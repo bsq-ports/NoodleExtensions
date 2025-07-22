@@ -16,7 +16,6 @@ class NoodleMovementDataProviderPool {
  public:
   NoodleMovementDataProviderPool(int count) : free() {
     for (int i = 0; i < count; ++i) {
-      NELogger::Logger.info("hi");
       put(NoodleMovementDataProvider::New_ctor());
     }
   }

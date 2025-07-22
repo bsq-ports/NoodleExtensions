@@ -35,7 +35,10 @@ MAKE_HOOK_MATCH(ReplaceObstacleMovement, &ObstacleController::Init, void,
   if (!Hooks::isNoodleHookEnabled())
     return ReplaceObstacleMovement(self, obstacleData, obstacleSpawnData);
 
-  auto provider = NECaches::noodleMovementDataProviderPool->get(obstacleData);
+  // auto provider = NECaches::noodleMovementDataProviderPool->get(obstacleData);
+  auto provider = NoodleExtensions::NoodleMovementDataProvider::New_ctor();
+  provider->original = reinterpret_cast<IVariableMovementDataProvider*>(NECaches::VariableMovementDataProvider.ptr());
+  provider->InitObject(obstacleData);
   auto IProvider = reinterpret_cast<IVariableMovementDataProvider*>(provider);
 
   self->_variableMovementDataProvider = IProvider;
@@ -50,7 +53,10 @@ MAKE_HOOK_MATCH(ReplaceNoteMovement, &NoteController::Init, void,
   if (!Hooks::isNoodleHookEnabled())
     return ReplaceNoteMovement(self, noteData, noteSpawnData, endRotation, noteUniformScale, rotateTowardsPlayer, useRandomRotation);
 
-  auto provider = NECaches::noodleMovementDataProviderPool->get(noteData);
+  // auto provider = NECaches::noodleMovementDataProviderPool->get(noteData);
+  auto provider = NoodleExtensions::NoodleMovementDataProvider::New_ctor();
+  provider->original = reinterpret_cast<IVariableMovementDataProvider*>(NECaches::VariableMovementDataProvider.ptr());
+  provider->InitObject(noteData);
   auto IProvider = reinterpret_cast<IVariableMovementDataProvider*>(provider);
 
   auto noteMovement = self->_noteMovement;
@@ -79,7 +85,10 @@ MAKE_HOOK_MATCH(ReplaceSliderMovement, &SliderController::Init, void,
   if (!Hooks::isNoodleHookEnabled())
     return ReplaceSliderMovement(self, lengthType, sliderData, sliderSpawnData, noteUniformScale, randomValue);
 
-  auto provider = NECaches::noodleMovementDataProviderPool->get(sliderData);
+  // auto provider = NECaches::noodleMovementDataProviderPool->get(sliderData);
+  auto provider = NoodleExtensions::NoodleMovementDataProvider::New_ctor();
+  provider->original = reinterpret_cast<IVariableMovementDataProvider*>(NECaches::VariableMovementDataProvider.ptr());
+  provider->InitObject(sliderData);
   auto IProvider = reinterpret_cast<IVariableMovementDataProvider*>(provider);
   self->_variableMovementDataProvider = IProvider;
   self->_sliderMovement->_variableMovementDataProvider = IProvider;

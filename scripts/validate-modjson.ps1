@@ -1,3 +1,5 @@
+#!/usr/bin/env pwsh
+
 $mod = "./mod.json"
 $modTemplate = "./mod.template.json"
 $qpmShared = "./qpm.shared.json"

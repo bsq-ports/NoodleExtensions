@@ -1,5 +1,11 @@
+#!/usr/bin/env pwsh
 
-$NDKPath = Get-Content ./ndkpath.txt
+if (Test-Path "$PSScriptRoot/ndkpath.txt")
+{
+    $NDKPath = Get-Content $PSScriptRoot/ndkpath.txt
+} else {
+    $NDKPath = $ENV:ANDROID_NDK_HOME
+}
 
 $stackScript = "$NDKPath/ndk-stack"
 if (-not ($PSVersionTable.PSEdition -eq "Core")) {

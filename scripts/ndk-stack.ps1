@@ -1,3 +1,5 @@
+#!/usr/bin/env pwsh
+
 Param(
     [Parameter(Mandatory=$false)]
     [String] $logName = "RecentCrash.log",
@@ -15,8 +17,9 @@ if ($help -eq $true) {
     exit
 }
 
-if (Test-Path "./ndkpath.txt") {
-    $NDKPath = Get-Content ./ndkpath.txt
+if (Test-Path "$PSScriptRoot/ndkpath.txt")
+{
+    $NDKPath = Get-Content $PSScriptRoot/ndkpath.txt
 } else {
     $NDKPath = $ENV:ANDROID_NDK_HOME
 }

@@ -1,3 +1,5 @@
+#!/usr/bin/env pwsh
+
 # Thanks to konk rame rack: https://github.com/kodenamekrak/Cinema/blob/main/scripts/addr2line.ps1
 # Usage:
 # 1. Copy debug so from release to build/debug/libanytext.so

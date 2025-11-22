@@ -1,6 +1,8 @@
-if (Test-Path "./ndkpath.txt")
+#!/usr/bin/env pwsh
+
+if (Test-Path "$PSScriptRoot/ndkpath.txt")
 {
-    $NDKPath = Get-Content ./ndkpath.txt
+    $NDKPath = Get-Content $PSScriptRoot/ndkpath.txt
 } else {
     $NDKPath = $ENV:ANDROID_NDK_HOME
 }

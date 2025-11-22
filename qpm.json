@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/QuestPackageManager/QPM.Package/refs/heads/main/qpm.schema.json",
   "version": "0.4.0",
   "sharedDir": "shared",
   "dependenciesDir": "extern",
@@ -8,7 +9,8 @@
     "version": "1.0.0",
     "url": null,
     "additionalData": {
-      "overrideSoName": "libnoodleextensions.so"
+      "overrideSoName": "libnoodleextensions.so",
+      "cmake": true
     }
   },
   "workspace": {
@@ -17,17 +19,22 @@
         "pwsh ./scripts/addr2line.ps1 libnoodleextensions.so $0"
       ],
       "build": [
-        "pwsh ./scripts/build.ps1"
+        "pwsh ./scripts/build.ps1 --release"
       ],
-      "clean": ["pwsh ./scripts/build.ps1 -clean"],
+      "clean": [
+        "pwsh ./scripts/build.ps1 -clean"
+      ],
       "copy": [
-        "pwsh ./scripts/copy.ps1 $0:?"
+        "pwsh ./scripts/copy.ps1"
+      ],
+      "copyRelease": [
+        "pwsh ./scripts/copy.ps1 --release"
       ],
       "logcat": [
         "pwsh ./scripts/start-logging.ps1"
       ],
       "qmod": [
-        "pwsh ./scripts/build.ps1",
+        "pwsh ./scripts/build.ps1 --release",
         "pwsh ./scripts/createqmod.ps1"
       ],
       "restart": [

@@ -13,9 +13,11 @@ message("Building ${COMPILE_ID} version ${MOD_VERSION} with ID ${MOD_ID} ${CMAKE
 
 # Enable interprocedural optimization (LTO) only for Release builds
 if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+        message("Release build")
         set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
         add_compile_options(-O3)
 else()
+        message("Debug build")
         set(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
 endif()
 

@@ -42,6 +42,7 @@ using namespace TrackParenting;
 
 BeatmapObjectAssociatedData* noteUpdateAD = nullptr;
 TracksAD::TracksVector noteTracks;
+
 std::unordered_map<std::string_view, std::unordered_set<NoteController*>> linkedNotes;
 std::unordered_map<NoteController*, std::unordered_set<NoteController*>*> linkedLinkedNotes;
 
@@ -49,7 +50,6 @@ CutoutEffect* NECaches::GetCutout(GlobalNamespace::NoteControllerBase* nc, NECac
   CutoutEffect*& cutoutEffect = noteCache.cutoutEffect;
 
   if (cutoutEffect) return cutoutEffect;
-
 
   noteCache.baseNoteVisuals = noteCache.baseNoteVisuals ?: nc->get_gameObject()->GetComponent<BaseNoteVisuals*>();
   CutoutAnimateEffect* cutoutAnimateEffect = noteCache.baseNoteVisuals->_cutoutAnimateEffect;
@@ -90,6 +90,8 @@ NECaches::GetDisappearingArrowController(GlobalNamespace::MirroredGameNoteContro
 float noteTimeAdjust(float original, float jumpDuration) {
   if (noteTracks.empty()) return original;
 
+
+
   auto time = NoodleExtensions::getTimeProp(noteTracks);
 
   if (time) {
@@ -108,7 +110,7 @@ void NECaches::ClearNoteCaches() {
 }
 
 MAKE_HOOK_MATCH(NoteController_Init, &NoteController::Init, void, NoteController* self,
-                GlobalNamespace::NoteData* noteData, ByRef<GlobalNamespace::NoteSpawnData> noteSpawnData, 
+                GlobalNamespace::NoteData* noteData, ByRef<GlobalNamespace::NoteSpawnData> noteSpawnData,
                 float_t endRotation, float_t uniformScale, bool rotateTowardsPlayer, bool useRandomRotation) {
   NoteController_Init(self, noteData, noteSpawnData, endRotation, uniformScale, rotateTowardsPlayer, useRandomRotation);
 
@@ -127,7 +129,7 @@ MAKE_HOOK_MATCH(NoteController_Init, &NoteController::Init, void, NoteController
   if (!customNoteData->customData) return;
   BeatmapObjectAssociatedData& ad = getAD(customNoteData->customData);
 
-  if(!ad.parsed) return;
+  if (!ad.parsed) return;
 
   auto link = ad.objectData.link;
   if (link) {
@@ -182,6 +184,7 @@ MAKE_HOOK_MATCH(NoteController_Init, &NoteController::Init, void, NoteController
     }
   }
   auto const& tracks = TracksAD::getAD(customNoteData->customData).tracks;
+
   if (!tracks.empty()) {
     auto go = self->get_gameObject();
     for (auto& track : tracks) {
@@ -204,7 +207,8 @@ MAKE_HOOK_MATCH(NoteController_Init, &NoteController::Init, void, NoteController
   ad.localRotation = localRotation;
 
   float startVerticalVelocity = jumpGravity * halfJumpDuration;
-  float yOffset = (startVerticalVelocity * halfJumpDuration) - (jumpGravity * halfJumpDuration * halfJumpDuration * 0.5f);
+  float yOffset =
+      (startVerticalVelocity * halfJumpDuration) - (jumpGravity * halfJumpDuration * halfJumpDuration * 0.5f);
   ad.noteOffset = Vector3(jumpEndPos.x, jumpEndPos.y + yOffset, 0);
 
   self->Update();
@@ -235,11 +239,11 @@ MAKE_HOOK_MATCH(NoteController_ManualUpdate, &NoteController::ManualUpdate, void
   // }
 
   BeatmapObjectAssociatedData& ad = getAD(customNoteData->customData);
-  auto const& tracks = TracksAD::getAD(customNoteData->customData).tracks;
+  auto const& trackKeys = TracksAD::getAD(customNoteData->customData).tracks;
 
   noteUpdateAD = &ad;
-  noteTracks = tracks;
-
+  noteTracks = trackKeys;
+  auto& noteBeatmapAD = TracksAD::getBeatmapAD(customNoteData->customData);
   if (noteTracks.empty() && !ad.animationData.parsed) {
     return NoteController_ManualUpdate(self);
   }
@@ -248,7 +252,9 @@ MAKE_HOOK_MATCH(NoteController_ManualUpdate, &NoteController::ManualUpdate, void
   NoteFloorMovement* floorMovement = self->_noteMovement->_floorMovement;
   IVariableMovementDataProvider* variableMovementDataProvider = self->_noteMovement->_variableMovementDataProvider;
 
-  auto time = NoodleExtensions::getTimeProp(tracks);
+
+
+  auto time = NoodleExtensions::getTimeProp(noteTracks);
   float normalTime;
   if (time) {
     normalTime = time.value();
@@ -260,7 +266,7 @@ MAKE_HOOK_MATCH(NoteController_ManualUpdate, &NoteController::ManualUpdate, void
   }
 
   // auto context = TracksAD::getBeatmapAD(NECaches::customBeatmapData->customData).internal_tracks_context;
-  AnimationHelper::ObjectOffset offset = AnimationHelper::GetObjectOffset(ad.animationData, tracks, normalTime);
+  AnimationHelper::ObjectOffset offset = AnimationHelper::GetObjectOffset(ad.animationData, noteTracks, normalTime);
 
   if (offset.positionOffset.has_value()) {
     auto const& offsetPos = *offset.positionOffset;
@@ -310,7 +316,7 @@ MAKE_HOOK_MATCH(NoteController_ManualUpdate, &NoteController::ManualUpdate, void
     ArrayW<ConditionalMaterialSwitcher*> materialSwitchers = noteCache.conditionalMaterialSwitchers;
     for (auto* materialSwitcher : materialSwitchers) {
       materialSwitcher->_renderer->set_sharedMaterial(isDissolving ? materialSwitcher->_material1
-                                                                  : materialSwitcher->_material0);
+                                                                   : materialSwitcher->_material0);
     }
     noteCache.dissolveEnabled = isDissolving;
   }

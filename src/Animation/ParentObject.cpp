@@ -188,7 +188,7 @@ void ParentObject::AssignTrack(ParentTrackEventData const& parentTrackEventData)
   parentTrackEventData.parentTrack.RegisterGameObject(parentGameObject);
 
   for (auto& track : parentTrackEventData.childrenTracks) {
-    if (track.track == parentTrackEventData.parentTrack.track) {
+    if (track == parentTrackEventData.parentTrack) {
       NELogger::Logger.error("How could a track contain itself?");
     }
 

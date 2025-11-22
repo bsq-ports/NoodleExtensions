@@ -42,6 +42,8 @@ struct ::il2cpp_utils::il2cpp_type_check::MetadataGetter<
 static constexpr void AddToTrack(CustomJSONData::CustomNoteData* noteData, GameObject* gameObject) {
   if (noteData->customData && noteData->customData->value) {
     auto const& tracks = TracksAD::getAD(noteData->customData).tracks;
+
+
     if (!tracks.empty()) {
       for (auto& track : tracks) {
         track.RegisterGameObject(gameObject);

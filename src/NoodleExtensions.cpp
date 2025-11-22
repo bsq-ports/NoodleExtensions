@@ -18,6 +18,7 @@ bool NECaches::hasLocalSpaceTrail;
 bool NECaches::hasPlayerTransfrom;
 bool NECaches::LeftHandedMode;
 SafePtr<Zenject::DiContainer> NECaches::GameplayCoreContainer;
+// SafePtr<CustomJSONData::CustomBeatmapData> NECaches::customBeatmapData;
 SafePtr<GlobalNamespace::IJumpOffsetYProvider> NECaches::JumpOffsetYProvider;
 SafePtr<GlobalNamespace::VariableMovementDataProvider> NECaches::VariableMovementDataProvider;
 SafePtr<GlobalNamespace::BeatmapObjectSpawnController::InitData> NECaches::InitData;

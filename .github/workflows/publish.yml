@@ -5,6 +5,8 @@ env:
   qmodName: NoodleExtensions
   cache-name: noodleextensions_cache
 
+permissions:
+  contents: write
 on:
   push:
     tags:
@@ -15,37 +17,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         name: Checkout
         with:
           submodules: true
           lfs: true
 
-      - uses: seanmiddleditch/gha-setup-ninja@v3
-
-      # - name: Create ndkpath.txt
-      #   run: |
-      #     echo "$ANDROID_NDK_LATEST_HOME" > ${GITHUB_WORKSPACE}/ndkpath.txt
-      #     cat ${GITHUB_WORKSPACE}/ndkpath.txt
-
       - name: Get Tag Version
         id: get_tag_version
         run: |
           echo ${GITHUB_REF#refs/tags/}
-          echo ::set-output name=TAG::${GITHUB_REF#refs/tags/}
-          echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
+          echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 
-      - name: QPM Rust Action
-        uses: Fernthedev/qpm-rust-action@v1
+      - name: Get QPM
+        uses: Fernthedev/qpm-action@v1
         with:
+          resolve_ndk: true
           #required
           workflow_token: ${{secrets.GITHUB_TOKEN}}
-
           restore: true # will run restore on download
           cache: true #will cache dependencies
-
           publish: false
-
           version: ${{ steps.get_tag_version.outputs.VERSION }}
           tag: ${{ steps.get_tag_version.outputs.TAG }}
 
@@ -60,32 +53,42 @@ jobs:
         run: |
           cd ${GITHUB_WORKSPACE}
           qpm s build
+          qpm qmod manifest
           qpm qmod zip
 
-      - name: Get Library Name
+      - name: Get Library Name and Build ID
         id: libname
         run: |
           cd ./build/
           pattern="lib${module_id}*.so"
           files=( $pattern )
-          echo ::set-output name=NAME::"${files[0]}"
+          echo "LIBNAME=${files[0]}" >> $GITHUB_ENV
+          echo "BUILD_ID=$(readelf -n ${files[0]} | grep -Po "(?<=Build ID: )[0-9a-f]+")" >> $GITHUB_ENV
 
       - name: Rename debug
         run: |
-          mv ./build/debug/${{ steps.libname.outputs.NAME }} ./build/debug/debug_${{ steps.libname.outputs.NAME }}
+          mv ./build/debug/${{ env.LIBNAME }} ./build/debug/debug_${{ env.LIBNAME }}
 
+      - name: Calculate SHA-256 of the qmod file
+        id: qmodsha
+        run: |
+          echo "QMOD_SHA=$(sha256sum ./${{ env.qmodName }}.qmod | grep -Po "^[0-9a-f]+")" >> $GITHUB_ENV
+          
       - name: Upload to Release
         id: upload_file_release
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v2
         with:
           name: ${{ github.event.inputs.release_msg }}
           tag_name: ${{ github.event.inputs.version }}
+          body: |
+            ### Build info
+            
+            SHA-256: ${{ env.QMOD_SHA }}
+            Build ID: ${{ env.BUILD_ID }}
           files: |
             ./${{ env.qmodName }}.qmod
-            ./build/${{ steps.libname.outputs.NAME }}
-            ./build/debug/debug_${{ steps.libname.outputs.NAME }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            ./build/${{ env.LIBNAME }}
+            ./build/debug/debug_${{ env.LIBNAME }}
 
       - name: Make PR to QeatMods3
         id: qmod-release

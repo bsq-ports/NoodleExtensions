@@ -46,6 +46,7 @@ struct ObjectCustomData {
   std::optional<float> startY;
   std::optional<float> tailStartX;
   std::optional<float> tailStartY;
+  float internalTailStartNoteLineLayer; // TODO: recheck CJD?
 
   std::optional<NEVector::Quaternion> rotation;
   std::optional<NEVector::Quaternion> localRotation;
@@ -55,6 +56,12 @@ struct ObjectCustomData {
   std::optional<bool> uninteractable;
 
   // notes
+  bool disableBadCutDirection;
+  bool disableBadCutSaberType;
+  bool disableBadCutSpeed;
+  std::optional<float> internalFlipYSide; // TODO: recheck CJD?
+  std::optional<float> internalFlipLineIndex; // TODO: recheck CJD?
+  float internalStartNoteLineLayer; // TODO: recheck CJD?
   std::optional<bool> disableNoteGravity;
   bool disableNoteLook;
   std::optional<std::string> link;

@@ -11,9 +11,7 @@ A port of the Noodle Extensions mod made originally for the PC version of Beat S
 - [x] Fix audio being drowned out for seemingly no reason. Common in Doppelganger. Perhaps an issue with walls?
 - [x] Fix notes looking towards (0, 0, 0). Maybe calculated in `src/hooks/NoteJump.cpp`
 - [x] Fix start beat offset
-- [ ] Implement `disableBadCutDirection`
-- [ ] Implement `disableBadCutSpeed`
-- [ ] Implement `disableBadCutSaberType`
+- [x] Implement `disableBadCut*` modifiers
 - [x] Fix crashes when restarting a modchart
 - [x] Fix crash when Replay tries to load a modchart replay
 - [ ] Remove wall adjustments. Not only do they look different, but they were first added to get around poorly acting distortion effects, which is a solved problem with GraphicsTweaks

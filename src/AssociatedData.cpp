@@ -48,6 +48,8 @@ ObjectCustomData::ObjectCustomData(rapidjson::Value const& customData, CustomJSO
   tailStartX = tailX;
   tailStartY = tailY;
 
+  internalTailStartNoteLineLayer = NEJSON::ReadOptionalFloat(customData, NoodleExtensions::Constants::INTERNAL_TAILSTARTNOTELINELAYER).value_or(0.0f);
+
   // TODO: Mirror X
 
   rotation = NEJSON::ReadOptionalRotation(customData, v2 ? NoodleExtensions::Constants::V2_ROTATION
@@ -87,6 +89,16 @@ ObjectCustomData::ObjectCustomData(rapidjson::Value const& customData, CustomJSO
   }
 
   // TODO: FLIP X
+
+  if (!v2) {
+    disableBadCutDirection = NEJSON::ReadOptionalBool(customData, NoodleExtensions::Constants::NOTE_BADCUT_DIRECTION_DISABLE).value_or(false);
+    disableBadCutSaberType = NEJSON::ReadOptionalBool(customData, NoodleExtensions::Constants::NOTE_BADCUT_SABERTYPE_DISABLE).value_or(false);
+    disableBadCutSpeed = NEJSON::ReadOptionalBool(customData, NoodleExtensions::Constants::NOTE_BADCUT_SPEED_DISABLE).value_or(false);
+  }
+  
+  internalFlipYSide = NEJSON::ReadOptionalFloat(customData, NoodleExtensions::Constants::INTERNAL_FLIPYSIDE);
+  internalFlipLineIndex = NEJSON::ReadOptionalFloat(customData, NoodleExtensions::Constants::INTERNAL_FLIPLINEINDEX);
+  internalStartNoteLineLayer = NEJSON::ReadOptionalFloat(customData, NoodleExtensions::Constants::INTERNAL_STARTNOTELINELAYER).value_or(0.0f);
 
   disableNoteGravity = NEJSON::ReadOptionalBool(customData, v2 ? NoodleExtensions::Constants::V2_NOTE_GRAVITY_DISABLE
                                                                : NoodleExtensions::Constants::NOTE_GRAVITY_DISABLE);

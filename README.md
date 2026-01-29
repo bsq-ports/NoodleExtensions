@@ -24,7 +24,7 @@ A port of the Noodle Extensions mod made originally for the PC version of Beat S
 - [x] Fix V3 custom event animating offset position
 - [x] Fix notes being double spawned
 - [x] Fix CJD loading arcs and chains
-- [ ] Fix fake notes
+- [x] Fix fake notes
 - [x] Fix CJD VNJS
 - [x] Fix Chroma V2 position and localPosition missing kNoteLinesDistance
 - [ ] Beat Leader is generating invalid, corrupted replays and refrains from uploading them

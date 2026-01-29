@@ -137,9 +137,9 @@ MAKE_HOOK_MATCH(V3_BeatmapDataLoader_GetBeatmapDataFromSaveData,
     for (auto const& it : key##it->value.GetArray()) {                                                                 \
       auto item = parse(it);                                                                                           \
       auto obj = convert(item);                                                                                        \
+      if (!obj) continue;                                                                                              \
       auto& ad = getAD(obj->customData);                                                                               \
       ad.objectData.fake = true;                                                                                       \
-      if (!obj) continue;                                                                                              \
       customBeatmap->AddBeatmapObjectDataOverride(obj);                                                                \
     }                                                                                                                  \
   }

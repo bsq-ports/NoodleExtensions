@@ -22,7 +22,7 @@ using namespace GlobalNamespace;
  */
 bool FakeNoteHelper::GetFakeNote(NoteData* noteData) {
   auto customNoteData = il2cpp_utils::try_cast<CustomJSONData::CustomNoteData>(noteData);
-  if (!customNoteData || !customNoteData.value()->customData->value) {
+  if (!customNoteData || !customNoteData.value()->customData) {
     return false;
   }
   BeatmapObjectAssociatedData& ad = getAD(customNoteData.value()->customData);
@@ -31,7 +31,7 @@ bool FakeNoteHelper::GetFakeNote(NoteData* noteData) {
 
 bool FakeNoteHelper::GetCuttable(NoteData* noteData) {
   auto customNoteData = il2cpp_utils::try_cast<CustomJSONData::CustomNoteData>(noteData);
-  if (!customNoteData || !customNoteData.value()->customData->value) {
+  if (!customNoteData || !customNoteData.value()->customData) {
     return true;
   }
   BeatmapObjectAssociatedData& ad = getAD(customNoteData.value()->customData);
@@ -40,10 +40,10 @@ bool FakeNoteHelper::GetCuttable(NoteData* noteData) {
 
 bool FakeNoteHelper::GetAttractableArc(SliderData* arcData) {
   auto customArcData = il2cpp_utils::try_cast<CustomJSONData::CustomSliderData>(arcData);
-  if (!customArcData || !customArcData.value()->customData->value) {
+  if (!customArcData || !customArcData.value()->customData) {
     return true;
   }
-  BeatmapObjectAssociatedData& ad = getAD(customArcData.value()->customData);\
+  BeatmapObjectAssociatedData& ad = getAD(customArcData.value()->customData);
   return !ad.objectData.uninteractable.value_or(false);
 }
 

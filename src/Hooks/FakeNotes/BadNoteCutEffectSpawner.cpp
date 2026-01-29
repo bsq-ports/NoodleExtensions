@@ -3,6 +3,7 @@
 
 #include "GlobalNamespace/GameNoteController.hpp"
 #include "GlobalNamespace/BadNoteCutEffectSpawner.hpp"
+#include "GlobalNamespace/BombCutSoundEffectManager.hpp"
 
 #include "FakeNoteHelper.h"
 #include "NEHooks.h"
@@ -20,7 +21,18 @@ MAKE_HOOK_MATCH(BadNoteCutEffectSpawner_HandleNoteWasCut, &BadNoteCutEffectSpawn
   }
 }
 
+MAKE_HOOK_MATCH(BombCutSoundEffectManager_HandleNoteWasCut, &BombCutSoundEffectManager::HandleNoteWasCut, void,
+                BombCutSoundEffectManager* self, GlobalNamespace::NoteController* noteController,
+                ByRef<GlobalNamespace::NoteCutInfo> noteCutInfo) {
+  if (!Hooks::isNoodleHookEnabled()) return BombCutSoundEffectManager_HandleNoteWasCut(self, noteController, noteCutInfo);
+
+  if (!FakeNoteHelper::GetFakeNote(noteController->noteData)) {
+    BombCutSoundEffectManager_HandleNoteWasCut(self, noteController, noteCutInfo);
+  }
+}
+
 void InstallBadNoteCutEffectSpawnerHooks() {
   INSTALL_HOOK(NELogger::Logger, BadNoteCutEffectSpawner_HandleNoteWasCut);
+  INSTALL_HOOK(NELogger::Logger, BombCutSoundEffectManager_HandleNoteWasCut);
 }
 NEInstallHooks(InstallBadNoteCutEffectSpawnerHooks);

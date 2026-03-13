@@ -2,6 +2,7 @@
 #include "Animation/AnimationHelper.h"
 #include "AssociatedData.h"
 #include "GlobalNamespace/PlayerTransforms.hpp"
+#include "GlobalNamespace/PlayerVRControllersManager.hpp"
 #include "NELogger.h"
 #include "UnityEngine/GameObject.hpp"
 #include "UnityEngine/Resources.hpp"
@@ -50,15 +51,16 @@ PlayerTrack* PlayerTrack::Create(PlayerTrackObject object) {
   }
 
   UnityEngine::Transform* target;
+  auto playerVRControllersManager = Resources::FindObjectsOfTypeAll<PlayerVRControllersManager*>()->FirstOrDefault();
   switch (object) {
   case PlayerTrackObject::Head:
     target = playerTransforms->_headTransform;
     break;
   case PlayerTrackObject::LeftHand:
-    target = playerTransforms->_leftHandTransform;
+    target = playerVRControllersManager->_leftHandVRController->transform;
     break;
   case PlayerTrackObject::RightHand:
-    target = playerTransforms->_rightHandTransform;
+    target = playerVRControllersManager->_rightHandVRController->transform;
     break;
   case PlayerTrackObject::Root:
   default:

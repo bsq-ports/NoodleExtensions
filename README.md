@@ -31,6 +31,7 @@ A port of the Noodle Extensions mod made originally for the PC version of Beat S
   - [ ] (Fixed in Beat Leader, awaiting new release)
 - [x] Fix half of the obstacles despawning
 - [x] Add offsetWorldPosition
+- [ ] Fix V3 saber offsets
 - [ ] Test many maps, update the list of known bugs, and decide if each is a mandatory fix or can wait for a patch update
 
 ## 1.40.8 Optional To-Do
@@ -99,7 +100,7 @@ Dates are (year/month/day)
   - [x] 1:16 The two tracks are positioned on top of each other
   - [x] 1:30 Unintentional fast walls
   - [x] 1:44 Track doesn't rotate with player
-  - [ ] 1:44 Track position is positioned too high (Broke between 26/1/31 and 26/2/16)
+  - [ ] 1:44 Track position is positioned too high (Broke between 25/12/24 and 26/3/1)
   - [ ] 1:47 Wall text doesn't move
   - [x] 2:46 Some walls are unintentionally hyper, some aren't
   - [x] 3:05 Wall text is centered and doesn't scroll
@@ -171,7 +172,7 @@ Dates are (year/month/day)
   - [ ] Crashes
 - [ ] [Team Grimoire (Salty)](https://beatsaver.com/maps/4b476) (26/1/28)
   - [ ] [Awaiting analysis]
-  - [ ] [Very broken]
+  - [ ] [Very broken] (No longer very broken (26/3/12))
   - [x] Spinning black hole section doesn't rotate or move notes (26/2/17)
 - [ ] [Try](https://beatsaver.com/maps/14d64) (25/12/4)
   - [x] 0:00 Flower is messed up

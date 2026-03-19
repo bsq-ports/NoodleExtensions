@@ -31,7 +31,7 @@ A port of the Noodle Extensions mod made originally for the PC version of Beat S
   - [ ] (Fixed in Beat Leader, awaiting new release)
 - [x] Fix half of the obstacles despawning
 - [x] Add offsetWorldPosition
-- [ ] Fix V3 saber offsets
+- [x] Fix V3 saber offsets
 - [ ] Test many maps, update the list of known bugs, and decide if each is a mandatory fix or can wait for a patch update
 
 ## 1.40.8 Optional To-Do

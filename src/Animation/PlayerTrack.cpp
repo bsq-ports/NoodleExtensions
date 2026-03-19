@@ -3,6 +3,7 @@
 #include "AssociatedData.h"
 #include "GlobalNamespace/PlayerTransforms.hpp"
 #include "GlobalNamespace/PlayerVRControllersManager.hpp"
+#include "GlobalNamespace/VRCenterAdjust.hpp"
 #include "NELogger.h"
 #include "UnityEngine/GameObject.hpp"
 #include "UnityEngine/Resources.hpp"
@@ -73,9 +74,26 @@ PlayerTrack* PlayerTrack::Create(PlayerTrackObject object) {
   playerTrack->trackObject = object;
   auto origin = playerTrack->origin = noodleObject->transform;
 
-  // Transform hierarchy manipulation: PLAYER PARENT -> NOODLE -> PLAYER
-  origin->SetParent(target->parent, false);
-  target->SetParent(origin, true);
+  if (object == PlayerTrackObject::Root) {
+    // Transform hierarchy manipulation: PLAYER PARENT -> NOODLE -> PLAYER
+    origin->SetParent(target->parent, false);
+    target->SetParent(origin, true);
+  } else {
+    // Can be null for inactive players in multiplayer
+    if (playerTransforms->_originParentTransform == nullptr) {
+        playerTransforms->_originParentTransform = playerTransforms->_originTransform->parent;
+    }
+
+    origin->SetParent(playerTransforms->_originParentTransform->transform, false);
+
+    GameObject* roomOffset = GameObject::New_ctor("NoodleRoomOffset");
+    roomOffset->SetActive(false);
+    Transform* roomOffsetTransform = roomOffset->transform;
+    roomOffset->AddComponent<VRCenterAdjust*>();
+    roomOffsetTransform->SetParent(origin);
+    roomOffset->SetActive(true);
+    target->SetParent(roomOffsetTransform, true);
+  }
 
   playerTrack->startLocalRot = playerTrack->origin->get_localRotation();
   playerTrack->startPos = playerTrack->origin->get_localPosition();

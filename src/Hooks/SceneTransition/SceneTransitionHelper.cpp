@@ -42,11 +42,7 @@ void SceneTransitionHelper::Patch(SongCore::SongLoader::CustomBeatmapLevel* beat
 
   NELogger::Logger.debug("Getting Save Data");
 
-  auto saveData = beatmapLevel->standardLevelInfoSaveDataV2;
-
-  if (!saveData) return;
-
-  auto customSaveInfo = saveData.value()->CustomSaveDataInfo;
+  auto customSaveInfo = beatmapLevel->CustomSaveDataInfo;
 
   if (!customSaveInfo) return;
 

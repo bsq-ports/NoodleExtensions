@@ -247,13 +247,13 @@
     {
       "dependency": {
         "id": "custom-json-data",
-        "versionRange": "=0.24.4",
+        "versionRange": "=0.24.5",
         "additionalData": {
-          "soLink": "https://github.com/bsq-ports/CustomJSONData/releases/download/v0.24.4/libcustom-json-data.so",
-          "debugSoLink": "https://github.com/bsq-ports/CustomJSONData/releases/download/v0.24.4/debug_libcustom-json-data.so",
+          "soLink": "https://github.com/bsq-ports/CustomJSONData/releases/download/v0.24.5/libcustom-json-data.so",
+          "debugSoLink": "https://github.com/bsq-ports/CustomJSONData/releases/download/v0.24.5/debug_libcustom-json-data.so",
           "overrideSoName": "libcustom-json-data.so",
-          "modLink": "https://github.com/bsq-ports/CustomJSONData/releases/download/v0.24.4/custom-json-data.qmod",
-          "branchName": "version/v0_24_4",
+          "modLink": "https://github.com/bsq-ports/CustomJSONData/releases/download/v0.24.5/custom-json-data.qmod",
+          "branchName": "version/v0_24_5",
           "compileOptions": {
             "cppFlags": [
               "-DRAPIDJSON_NEON"
@@ -262,7 +262,7 @@
           "cmake": true
         }
       },
-      "version": "0.24.4"
+      "version": "0.24.5"
     },
     {
       "dependency": {

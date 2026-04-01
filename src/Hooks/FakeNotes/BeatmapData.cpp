@@ -163,7 +163,7 @@ MAKE_HOOK_MATCH(V3_BeatmapDataLoader_GetBeatmapDataFromSaveData,
         CustomObstacleData::New_ctor(beat, data->b, data->b + data->duration, rotation, data->get_line(), GetNoteLineLayer(data->get_layer()),
                                      BeatToTime(data->b + data->duration) - beat, data->width, data->height);
 
-    obstacle->customData = CustomJSONData::JSONWrapperOrNull(data->customData);
+    obstacle->customData->Init(data->customData);
 
     return obstacle;
   });

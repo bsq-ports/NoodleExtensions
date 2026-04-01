@@ -76,7 +76,7 @@
       },
       {
         "id": "custom-json-data",
-        "versionRange": "^0.24.4",
+        "versionRange": "^0.24.0",
         "additionalData": {}
       },
       {
@@ -86,12 +86,12 @@
       },
       {
         "id": "tracks",
-        "versionRange": "^2.4.5",
+        "versionRange": "^2.4.0",
         "additionalData": {}
       },
       {
         "id": "songcore",
-        "versionRange": "^1.1.25",
+        "versionRange": "^1.1.0",
         "additionalData": {
           "includeQmod": true
         }
@@ -125,7 +125,7 @@
       },
       {
         "id": "bsml",
-        "versionRange": "^0.4.55",
+        "versionRange": "^0.4.54",
         "additionalData": {}
       }
     ]
@@ -184,13 +184,17 @@
     {
       "dependency": {
         "id": "tracks",
-        "versionRange": "=2.4.5",
+        "versionRange": "=2.5.1",
         "additionalData": {
+          "soLink": "https://github.com/bsq-ports/Tracks/releases/download/v2.5.1/libtracks.so",
+          "debugSoLink": "https://github.com/bsq-ports/Tracks/releases/download/v2.5.1/debug_libtracks.so",
           "overrideSoName": "libtracks.so",
+          "modLink": "https://github.com/bsq-ports/Tracks/releases/download/v2.5.1/Tracks.qmod",
+          "branchName": "version/v2_5_1",
           "cmake": true
         }
       },
-      "version": "2.4.5"
+      "version": "2.5.1"
     },
     {
       "dependency": {
@@ -213,19 +217,6 @@
     },
     {
       "dependency": {
-        "id": "scotland2",
-        "versionRange": "=0.1.6",
-        "additionalData": {
-          "soLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.6/libsl2.so",
-          "debugSoLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.6/debug_libsl2.so",
-          "overrideSoName": "libsl2.so",
-          "branchName": "version/v0_1_6"
-        }
-      },
-      "version": "0.1.6"
-    },
-    {
-      "dependency": {
         "id": "libil2cpp",
         "versionRange": "=0.4.0",
         "additionalData": {
@@ -242,10 +233,27 @@
     },
     {
       "dependency": {
-        "id": "custom-json-data",
-        "versionRange": "=0.24.5",
+        "id": "scotland2",
+        "versionRange": "=0.1.7",
         "additionalData": {
+          "soLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.7/libsl2.so",
+          "debugSoLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.7/debug_libsl2.so",
+          "overrideSoName": "libsl2.so",
+          "branchName": "version/v0_1_7"
+        }
+      },
+      "version": "0.1.7"
+    },
+    {
+      "dependency": {
+        "id": "custom-json-data",
+        "versionRange": "=0.24.4",
+        "additionalData": {
+          "soLink": "https://github.com/bsq-ports/CustomJSONData/releases/download/v0.24.4/libcustom-json-data.so",
+          "debugSoLink": "https://github.com/bsq-ports/CustomJSONData/releases/download/v0.24.4/debug_libcustom-json-data.so",
           "overrideSoName": "libcustom-json-data.so",
+          "modLink": "https://github.com/bsq-ports/CustomJSONData/releases/download/v0.24.4/custom-json-data.qmod",
+          "branchName": "version/v0_24_4",
           "compileOptions": {
             "cppFlags": [
               "-DRAPIDJSON_NEON"
@@ -254,7 +262,7 @@
           "cmake": true
         }
       },
-      "version": "0.24.5"
+      "version": "0.24.4"
     },
     {
       "dependency": {
@@ -366,21 +374,6 @@
     },
     {
       "dependency": {
-        "id": "songcore",
-        "versionRange": "=1.1.25",
-        "additionalData": {
-          "soLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.25/libsongcore.so",
-          "debugSoLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.25/debug_libsongcore.so",
-          "overrideSoName": "libsongcore.so",
-          "modLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.25/SongCore.qmod",
-          "branchName": "version/v1_1_25",
-          "cmake": true
-        }
-      },
-      "version": "1.1.25"
-    },
-    {
-      "dependency": {
         "id": "bsml",
         "versionRange": "=0.4.55",
         "additionalData": {
@@ -393,6 +386,21 @@
         }
       },
       "version": "0.4.55"
+    },
+    {
+      "dependency": {
+        "id": "songcore",
+        "versionRange": "=1.1.26",
+        "additionalData": {
+          "soLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.26/libsongcore.so",
+          "debugSoLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.26/debug_libsongcore.so",
+          "overrideSoName": "libsongcore.so",
+          "modLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.26/SongCore.qmod",
+          "branchName": "version/v1_1_26",
+          "cmake": true
+        }
+      },
+      "version": "1.1.26"
     }
   ]
 }

@@ -75,7 +75,7 @@
     },
     {
       "id": "custom-json-data",
-      "versionRange": "^0.24.4",
+      "versionRange": "^0.24.0",
       "additionalData": {}
     },
     {
@@ -85,12 +85,12 @@
     },
     {
       "id": "tracks",
-      "versionRange": "^2.4.5",
+      "versionRange": "^2.4.0",
       "additionalData": {}
     },
     {
       "id": "songcore",
-      "versionRange": "^1.1.25",
+      "versionRange": "^1.1.0",
       "additionalData": {
         "includeQmod": true
       }
@@ -124,7 +124,7 @@
     },
     {
       "id": "bsml",
-      "versionRange": "^0.4.55",
+      "versionRange": "^0.4.54",
       "additionalData": {}
     }
   ]

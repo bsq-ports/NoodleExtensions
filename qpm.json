@@ -6,7 +6,7 @@
   "info": {
     "name": "Noodle Extensions",
     "id": "NoodleExtensions",
-    "version": "1.0.0",
+    "version": "1.6.1",
     "url": null,
     "additionalData": {
       "overrideSoName": "libnoodleextensions.so",
@@ -85,7 +85,7 @@
     },
     {
       "id": "tracks",
-      "versionRange": "^2.4.0",
+      "versionRange": "^2.5.1",
       "additionalData": {}
     },
     {

@@ -14,7 +14,6 @@ A port of the Noodle Extensions mod made originally for the PC version of Beat S
 - [x] Implement `disableBadCut*` modifiers
 - [x] Fix crashes when restarting a modchart
 - [x] Fix crash when Replay tries to load a modchart replay
-- [ ] Remove wall adjustments. Not only do they look different, but they were first added to get around poorly acting distortion effects, which is a solved problem with GraphicsTweaks
 - [x] Investigate jump distance / speed
 - [x] Implement saber trail parenting to player track
 - [x] Fix saber trail culling
@@ -39,6 +38,7 @@ A port of the Noodle Extensions mod made originally for the PC version of Beat S
 - [x] Fix saber animations
 - [ ] The texture on some scaled obstacles will bleed outside the obstacle
 - [ ] Obstacle frames dissolve but not the fill
+- [ ] Improve obstacles by forcing graphics settings or tweaking ParametricBoxFakeGlowController_Refresh to calculate a wider outline
 - [ ] Fix Chroma not overriding player's override environment and colors
 - [ ] Fix lighting in maps such as Paradigm, Change of Scene, and BSSDHUYR Megamix 2023
 - [ ] Rework material switching

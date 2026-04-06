@@ -26,9 +26,12 @@ jobs:
       - name: Get Tag Version
         id: get_tag_version
         run: |
-          echo ${GITHUB_REF#refs/tags/}
-          echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-          echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+          TAG=${GITHUB_REF#refs/tags/}
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "TAG=$TAG" >> $GITHUB_OUTPUT
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Get QPM
         uses: Fernthedev/qpm-action@v1

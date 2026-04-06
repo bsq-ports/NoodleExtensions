@@ -29,19 +29,32 @@ static std::unordered_map<GlobalNamespace::IBladeMovementData*, GlobalNamespace:
 static SafePtrUnity<Transform> _origin;
 
 void CheckOrigin() {
-  if (!_origin) {
-    _origin = Resources::FindObjectsOfTypeAll<PlayerTransforms*>()->FirstOrDefault()->_originTransform;
+  if (_origin) return;
+
+  // CustomModels breaks player transforms and thus we have to check if origin is valid before using it
+  // https://github.com/bsq-ports/NoodleExtensions/issues/110
+  auto playerTransform = Resources::FindObjectsOfTypeAll<PlayerTransforms*>()->FirstOrDefault();
+  if (!playerTransform) {
+    NELogger::Logger.warn("PlayerTransforms not found, cannot apply SaberPlayerMovementFix");
+    return;
   }
+  _origin = playerTransform->_originTransform;
 }
 
 Vector3 ComputeWorld(Vector3 original) {
-    CheckOrigin();
-    return _origin->TransformPoint(original);
+  CheckOrigin();
+  // CustomModels breaks player transforms and thus we have to check if origin is valid before using it
+  if (!_origin) return original;
+
+  return _origin->TransformPoint(original);
 }
 
 Vector3 InverseComputeWorld(Vector3 original) {
-    CheckOrigin();
-    return _origin->InverseTransformPoint(original);
+  CheckOrigin();
+  // CustomModels breaks player transforms and thus we have to check if origin is valid before using it
+  if (!_origin) return original;
+
+  return _origin->InverseTransformPoint(original);
 }
 
 bool containsValue(SaberMovementData* data) {
@@ -53,33 +66,35 @@ bool containsValue(SaberMovementData* data) {
   return false;
 }
 
-MAKE_HOOK_MATCH(SaberMovementData_ComputeAdditionalData, &SaberMovementData::ComputeAdditionalData, void, SaberMovementData* self, 
-                Vector3 topPos, Vector3 bottomPos, int idxOffset, ByRef<Vector3> segmentNormal, ByRef<float> segmentAngle) {
-  if (!Hooks::isNoodleHookEnabled() || NECaches::hasLocalSpaceTrail || !NECaches::hasPlayerTransfrom) 
+MAKE_HOOK_MATCH(SaberMovementData_ComputeAdditionalData, &SaberMovementData::ComputeAdditionalData, void,
+                SaberMovementData* self, Vector3 topPos, Vector3 bottomPos, int idxOffset, ByRef<Vector3> segmentNormal,
+                ByRef<float> segmentAngle) {
+  if (!Hooks::isNoodleHookEnabled() || NECaches::hasLocalSpaceTrail || !NECaches::hasPlayerTransfrom) {
     return SaberMovementData_ComputeAdditionalData(self, topPos, bottomPos, idxOffset, segmentNormal, segmentAngle);
-
+  }
   int num = self->_data.size();
-	int num2 = self->_nextAddIndex + idxOffset;
-	int num3 = num2 - 1;
-	if (num3 < 0) {
-		num3 += num;
-	}
-	if (self->_validCount > 0) {
-		Sombrero::FastVector3 topPos2 = ComputeWorld(self->_data[num2].topPos);
-		Sombrero::FastVector3 bottomPos2 = ComputeWorld(self->_data[num2].bottomPos);
-		Sombrero::FastVector3 topPos3 = ComputeWorld(self->_data[num3].topPos);
-		Sombrero::FastVector3 bottomPos3 = ComputeWorld(self->_data[num3].bottomPos);
-		segmentNormal = self->ComputePlaneNormal(topPos2, bottomPos2, topPos3, bottomPos3);
-		segmentAngle = Sombrero::FastVector3::Angle(topPos3 - bottomPos3, topPos2 - bottomPos2);
-		return SaberMovementData_ComputeAdditionalData(self, topPos, bottomPos, idxOffset, segmentNormal, segmentAngle);
-	}
-	segmentNormal = Sombrero::FastVector3::zero();
-	segmentAngle = 0.0f;
+  int num2 = self->_nextAddIndex + idxOffset;
+  int num3 = num2 - 1;
+  if (num3 < 0) {
+    num3 += num;
+  }
+  if (self->_validCount > 0) {
+    Sombrero::FastVector3 topPos2 = ComputeWorld(self->_data[num2].topPos);
+    Sombrero::FastVector3 bottomPos2 = ComputeWorld(self->_data[num2].bottomPos);
+    Sombrero::FastVector3 topPos3 = ComputeWorld(self->_data[num3].topPos);
+    Sombrero::FastVector3 bottomPos3 = ComputeWorld(self->_data[num3].bottomPos);
+    segmentNormal = self->ComputePlaneNormal(topPos2, bottomPos2, topPos3, bottomPos3);
+    segmentAngle = Sombrero::FastVector3::Angle(topPos3 - bottomPos3, topPos2 - bottomPos2);
+    return SaberMovementData_ComputeAdditionalData(self, topPos, bottomPos, idxOffset, segmentNormal, segmentAngle);
+  }
+  segmentNormal = Sombrero::FastVector3::zero();
+  segmentAngle = 0.0f;
 }
 
-MAKE_HOOK_MATCH(SaberSwingRatingCounter_ProcessNewData, &SaberSwingRatingCounter::ProcessNewData, void, SaberSwingRatingCounter* self,
-                BladeMovementDataElement newData, BladeMovementDataElement prevData, bool prevDataAreValid) {
-  if (!Hooks::isNoodleHookEnabled() || NECaches::hasLocalSpaceTrail || !NECaches::hasPlayerTransfrom) 
+MAKE_HOOK_MATCH(SaberSwingRatingCounter_ProcessNewData, &SaberSwingRatingCounter::ProcessNewData, void,
+                SaberSwingRatingCounter* self, BladeMovementDataElement newData, BladeMovementDataElement prevData,
+                bool prevDataAreValid) {
+  if (!Hooks::isNoodleHookEnabled() || NECaches::hasLocalSpaceTrail || !NECaches::hasPlayerTransfrom)
     return SaberSwingRatingCounter_ProcessNewData(self, newData, prevData, prevDataAreValid);
 
   newData.topPos = ComputeWorld(newData.topPos);
@@ -90,8 +105,9 @@ MAKE_HOOK_MATCH(SaberSwingRatingCounter_ProcessNewData, &SaberSwingRatingCounter
   SaberSwingRatingCounter_ProcessNewData(self, newData, prevData, prevDataAreValid);
 }
 
-MAKE_HOOK_MATCH(SaberMovementData_lastAddedData, &SaberMovementData::get_lastAddedData, BladeMovementDataElement, SaberMovementData* self) {
-  if (!Hooks::isNoodleHookEnabled() || NECaches::hasLocalSpaceTrail || !NECaches::hasPlayerTransfrom) 
+MAKE_HOOK_MATCH(SaberMovementData_lastAddedData, &SaberMovementData::get_lastAddedData, BladeMovementDataElement,
+                SaberMovementData* self) {
+  if (!Hooks::isNoodleHookEnabled() || NECaches::hasLocalSpaceTrail || !NECaches::hasPlayerTransfrom)
     return SaberMovementData_lastAddedData(self);
 
   if (containsValue(self)) {
@@ -102,12 +118,13 @@ MAKE_HOOK_MATCH(SaberMovementData_lastAddedData, &SaberMovementData::get_lastAdd
 
   value.topPos = ComputeWorld(value.topPos);
   value.bottomPos = ComputeWorld(value.bottomPos);
-  
+
   return value;
 }
 
-MAKE_HOOK_MATCH(SaberMovementData_prevAddedData, &SaberMovementData::get_prevAddedData, BladeMovementDataElement, SaberMovementData* self) {
-  if (!Hooks::isNoodleHookEnabled() || NECaches::hasLocalSpaceTrail || !NECaches::hasPlayerTransfrom) 
+MAKE_HOOK_MATCH(SaberMovementData_prevAddedData, &SaberMovementData::get_prevAddedData, BladeMovementDataElement,
+                SaberMovementData* self) {
+  if (!Hooks::isNoodleHookEnabled() || NECaches::hasLocalSpaceTrail || !NECaches::hasPlayerTransfrom)
     return SaberMovementData_prevAddedData(self);
 
   if (containsValue(self)) {
@@ -118,13 +135,13 @@ MAKE_HOOK_MATCH(SaberMovementData_prevAddedData, &SaberMovementData::get_prevAdd
 
   value.topPos = ComputeWorld(value.topPos);
   value.bottomPos = ComputeWorld(value.bottomPos);
-  
+
   return value;
 }
 
 MAKE_HOOK_MATCH(SaberMovementData_AddNewData, &SaberMovementData::AddNewData, void, SaberMovementData* self,
                 Vector3 topPos, Vector3 bottomPos, float time) {
-  if (!Hooks::isNoodleHookEnabled() || NECaches::hasLocalSpaceTrail || !NECaches::hasPlayerTransfrom) 
+  if (!Hooks::isNoodleHookEnabled() || NECaches::hasLocalSpaceTrail || !NECaches::hasPlayerTransfrom)
     return SaberMovementData_AddNewData(self, topPos, bottomPos, time);
 
   if (containsValue(self)) {
@@ -138,9 +155,10 @@ MAKE_HOOK_MATCH(SaberMovementData_AddNewData, &SaberMovementData::AddNewData, vo
   SaberMovementData_AddNewData(self, InverseComputeWorld(topPos), InverseComputeWorld(bottomPos), time);
 }
 
-MAKE_HOOK_MATCH(SaberTrail_Setup, &SaberTrail::Setup, void, SaberTrail* self,
-                Color color, IBladeMovementData* movementData) {
-  if (!Hooks::isNoodleHookEnabled() || !NECaches::hasPlayerTransfrom) return SaberTrail_Setup(self, color, movementData);
+MAKE_HOOK_MATCH(SaberTrail_Setup, &SaberTrail::Setup, void, SaberTrail* self, Color color,
+                IBladeMovementData* movementData) {
+  if (!Hooks::isNoodleHookEnabled() || !NECaches::hasPlayerTransfrom)
+    return SaberTrail_Setup(self, color, movementData);
 
   if (NECaches::hasLocalSpaceTrail) {
     CheckOrigin();

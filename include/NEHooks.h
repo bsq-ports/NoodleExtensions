@@ -10,7 +10,7 @@ private:
 
 public:
   static void AddInstallFunc(std::string name, void (*installFunc)()) {
-    installFuncs.push_back(std::make_pair(name, installFunc));
+    installFuncs.emplace_back(name, installFunc);
   }
 
   static void InstallHooks() {

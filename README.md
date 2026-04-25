@@ -27,7 +27,6 @@ A port of the Noodle Extensions mod made originally for the PC version of Beat S
 - [x] Fix CJD VNJS
 - [x] Fix Chroma V2 position and localPosition missing kNoteLinesDistance
 - [x] Beat Leader is generating invalid, corrupted replays and refrains from uploading them
-  - [ ] (Fixed in Beat Leader, awaiting new release)
 - [x] Fix half of the obstacles despawning
 - [x] Add offsetWorldPosition
 - [x] Fix V3 saber offsets

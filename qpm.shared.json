@@ -6,7 +6,7 @@
     "info": {
       "name": "Noodle Extensions",
       "id": "NoodleExtensions",
-      "version": "1.6.1",
+      "version": "1.6.2",
       "url": null,
       "additionalData": {
         "overrideSoName": "libnoodleextensions.so",
@@ -85,7 +85,7 @@
       },
       {
         "id": "tracks",
-        "versionRange": "^2.5.1",
+        "versionRange": "^2.5.2",
         "additionalData": {}
       },
       {
@@ -160,13 +160,13 @@
     {
       "dependency": {
         "id": "tracks",
-        "versionRange": "=2.5.1",
+        "versionRange": "=2.5.2",
         "additionalData": {
           "overrideSoName": "libtracks.so",
           "cmake": true
         }
       },
-      "version": "2.5.1"
+      "version": "2.5.2"
     },
     {
       "dependency": {

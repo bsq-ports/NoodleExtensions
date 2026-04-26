@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/QuestPackageManager/QPM.Package/refs/heads/main/qpm.shared.schema.json",
   "config": {
     "version": "0.4.0",
     "sharedDir": "shared",
@@ -85,7 +86,7 @@
       },
       {
         "id": "tracks",
-        "versionRange": "^2.5.2",
+        "versionRange": "^2.5.3",
         "additionalData": {}
       },
       {
@@ -132,60 +133,6 @@
   "restoredDependencies": [
     {
       "dependency": {
-        "id": "bsml",
-        "versionRange": "=0.4.55",
-        "additionalData": {
-          "soLink": "https://github.com/bsq-ports/Quest-BSML/releases/download/v0.4.55/libbsml.so",
-          "debugSoLink": "https://github.com/bsq-ports/Quest-BSML/releases/download/v0.4.55/debug_libbsml.so",
-          "overrideSoName": "libbsml.so",
-          "modLink": "https://github.com/bsq-ports/Quest-BSML/releases/download/v0.4.55/BSML.qmod",
-          "branchName": "version/v0_4_55",
-          "cmake": true
-        }
-      },
-      "version": "0.4.55"
-    },
-    {
-      "dependency": {
-        "id": "rapidjson-macros",
-        "versionRange": "=2.1.0",
-        "additionalData": {
-          "headersOnly": true,
-          "branchName": "version/v2_1_0",
-          "cmake": false
-        }
-      },
-      "version": "2.1.0"
-    },
-    {
-      "dependency": {
-        "id": "tracks",
-        "versionRange": "=2.5.2",
-        "additionalData": {
-          "overrideSoName": "libtracks.so",
-          "cmake": true
-        }
-      },
-      "version": "2.5.2"
-    },
-    {
-      "dependency": {
-        "id": "libil2cpp",
-        "versionRange": "=0.4.0",
-        "additionalData": {
-          "headersOnly": true,
-          "compileOptions": {
-            "systemIncludes": [
-              "il2cpp/external/baselib/Include",
-              "il2cpp/external/baselib/Platforms/Android/Include"
-            ]
-          }
-        }
-      },
-      "version": "0.4.0"
-    },
-    {
-      "dependency": {
         "id": "sombrero",
         "versionRange": "=0.1.43",
         "additionalData": {
@@ -194,117 +141,6 @@
         }
       },
       "version": "0.1.43"
-    },
-    {
-      "dependency": {
-        "id": "custom-json-data",
-        "versionRange": "=0.24.5",
-        "additionalData": {
-          "overrideSoName": "libcustom-json-data.so",
-          "compileOptions": {
-            "cppFlags": [
-              "-DRAPIDJSON_NEON"
-            ]
-          },
-          "cmake": true
-        }
-      },
-      "version": "0.24.5"
-    },
-    {
-      "dependency": {
-        "id": "conditional-dependencies",
-        "versionRange": "=0.3.0",
-        "additionalData": {
-          "headersOnly": true,
-          "branchName": "version/v0_3_0",
-          "cmake": false
-        }
-      },
-      "version": "0.3.0"
-    },
-    {
-      "dependency": {
-        "id": "songcore",
-        "versionRange": "=1.1.26",
-        "additionalData": {
-          "soLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.26/libsongcore.so",
-          "debugSoLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.26/debug_libsongcore.so",
-          "overrideSoName": "libsongcore.so",
-          "modLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.26/SongCore.qmod",
-          "branchName": "version/v1_1_26",
-          "cmake": true
-        }
-      },
-      "version": "1.1.26"
-    },
-    {
-      "dependency": {
-        "id": "tinyxml2",
-        "versionRange": "=10.0.0",
-        "additionalData": {
-          "soLink": "https://github.com/MillzyDev/NDK-tinyxml2/releases/download/v10.0.0/libtinyxml2.so",
-          "debugSoLink": "https://github.com/MillzyDev/NDK-tinyxml2/releases/download/v10.0.0/debug_libtinyxml2.so",
-          "overrideSoName": "libtinyxml2.so",
-          "modLink": "https://github.com/MillzyDev/NDK-tinyxml2/releases/download/v10.0.0/tinyxml2.qmod",
-          "branchName": "version/v10_0_0",
-          "cmake": true
-        }
-      },
-      "version": "10.0.0"
-    },
-    {
-      "dependency": {
-        "id": "paper2_scotland2",
-        "versionRange": "=4.7.0",
-        "additionalData": {
-          "soLink": "https://github.com/Fernthedev/paperlog/releases/download/v4.7.0/libpaper2_scotland2.so",
-          "overrideSoName": "libpaper2_scotland2.so",
-          "modLink": "https://github.com/Fernthedev/paperlog/releases/download/v4.7.0/paper2_scotland2.qmod",
-          "branchName": "version/v4_7_0",
-          "compileOptions": {
-            "systemIncludes": [
-              "shared/utfcpp/source"
-            ]
-          },
-          "cmake": false
-        }
-      },
-      "version": "4.7.0"
-    },
-    {
-      "dependency": {
-        "id": "custom-types",
-        "versionRange": "=0.18.4",
-        "additionalData": {
-          "soLink": "https://github.com/QuestPackageManager/Il2CppQuestTypePatching/releases/download/v0.18.4/libcustom-types.so",
-          "debugSoLink": "https://github.com/QuestPackageManager/Il2CppQuestTypePatching/releases/download/v0.18.4/debug_libcustom-types.so",
-          "overrideSoName": "libcustom-types.so",
-          "modLink": "https://github.com/QuestPackageManager/Il2CppQuestTypePatching/releases/download/v0.18.4/CustomTypes.qmod",
-          "branchName": "version/v0_18_4",
-          "compileOptions": {
-            "cppFlags": [
-              "-Wno-invalid-offsetof"
-            ]
-          },
-          "cmake": true
-        }
-      },
-      "version": "0.18.4"
-    },
-    {
-      "dependency": {
-        "id": "config-utils",
-        "versionRange": "=2.0.3",
-        "additionalData": {
-          "headersOnly": true,
-          "soLink": "https://github.com/darknight1050/config-utils/releases/download/v2.0.3/libconfig-utils_test.so",
-          "overrideSoName": "libconfig-utils_test.so",
-          "branchName": "version/v2_0_3",
-          "cmake": true
-        }
-      },
-      "version": "2.0.3"
     },
     {
       "dependency": {
@@ -329,6 +165,181 @@
         }
       },
       "version": "4008.0.0"
+    },
+    {
+      "dependency": {
+        "id": "tinyxml2",
+        "versionRange": "=10.0.0",
+        "additionalData": {
+          "soLink": "https://github.com/MillzyDev/NDK-tinyxml2/releases/download/v10.0.0/libtinyxml2.so",
+          "debugSoLink": "https://github.com/MillzyDev/NDK-tinyxml2/releases/download/v10.0.0/debug_libtinyxml2.so",
+          "overrideSoName": "libtinyxml2.so",
+          "modLink": "https://github.com/MillzyDev/NDK-tinyxml2/releases/download/v10.0.0/tinyxml2.qmod",
+          "branchName": "version/v10_0_0",
+          "cmake": true
+        }
+      },
+      "version": "10.0.0"
+    },
+    {
+      "dependency": {
+        "id": "tracks",
+        "versionRange": "=2.5.3",
+        "additionalData": {
+          "soLink": "https://github.com/bsq-ports/Tracks/releases/download/v2.5.3/libtracks.so",
+          "debugSoLink": "https://github.com/bsq-ports/Tracks/releases/download/v2.5.3/debug_libtracks.so",
+          "overrideSoName": "libtracks.so",
+          "modLink": "https://github.com/bsq-ports/Tracks/releases/download/v2.5.3/Tracks.qmod",
+          "branchName": "version/v2_5_3",
+          "cmake": true
+        }
+      },
+      "version": "2.5.3"
+    },
+    {
+      "dependency": {
+        "id": "fmt",
+        "versionRange": "=11.0.2",
+        "additionalData": {
+          "headersOnly": true,
+          "branchName": "version/v11_0_2",
+          "compileOptions": {
+            "systemIncludes": [
+              "fmt/include/"
+            ],
+            "cppFlags": [
+              "-DFMT_HEADER_ONLY"
+            ]
+          }
+        }
+      },
+      "version": "11.0.2"
+    },
+    {
+      "dependency": {
+        "id": "libil2cpp",
+        "versionRange": "=0.4.0",
+        "additionalData": {
+          "headersOnly": true,
+          "compileOptions": {
+            "systemIncludes": [
+              "il2cpp/external/baselib/Include",
+              "il2cpp/external/baselib/Platforms/Android/Include"
+            ]
+          }
+        }
+      },
+      "version": "0.4.0"
+    },
+    {
+      "dependency": {
+        "id": "scotland2",
+        "versionRange": "=0.1.7",
+        "additionalData": {
+          "soLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.7/libsl2.so",
+          "debugSoLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.7/debug_libsl2.so",
+          "overrideSoName": "libsl2.so",
+          "branchName": "version/v0_1_7"
+        }
+      },
+      "version": "0.1.7"
+    },
+    {
+      "dependency": {
+        "id": "custom-json-data",
+        "versionRange": "=0.24.5",
+        "additionalData": {
+          "soLink": "https://github.com/bsq-ports/CustomJSONData/releases/download/v0.24.5/libcustom-json-data.so",
+          "debugSoLink": "https://github.com/bsq-ports/CustomJSONData/releases/download/v0.24.5/debug_libcustom-json-data.so",
+          "overrideSoName": "libcustom-json-data.so",
+          "modLink": "https://github.com/bsq-ports/CustomJSONData/releases/download/v0.24.5/custom-json-data.qmod",
+          "branchName": "version/v0_24_5",
+          "compileOptions": {
+            "cppFlags": [
+              "-DRAPIDJSON_NEON"
+            ]
+          },
+          "cmake": true
+        }
+      },
+      "version": "0.24.5"
+    },
+    {
+      "dependency": {
+        "id": "custom-types",
+        "versionRange": "=0.18.4",
+        "additionalData": {
+          "soLink": "https://github.com/QuestPackageManager/Il2CppQuestTypePatching/releases/download/v0.18.4/libcustom-types.so",
+          "debugSoLink": "https://github.com/QuestPackageManager/Il2CppQuestTypePatching/releases/download/v0.18.4/debug_libcustom-types.so",
+          "overrideSoName": "libcustom-types.so",
+          "modLink": "https://github.com/QuestPackageManager/Il2CppQuestTypePatching/releases/download/v0.18.4/CustomTypes.qmod",
+          "branchName": "version/v0_18_4",
+          "compileOptions": {
+            "cppFlags": [
+              "-Wno-invalid-offsetof"
+            ]
+          },
+          "cmake": true
+        }
+      },
+      "version": "0.18.4"
+    },
+    {
+      "dependency": {
+        "id": "rapidjson-macros",
+        "versionRange": "=2.1.0",
+        "additionalData": {
+          "headersOnly": true,
+          "branchName": "version/v2_1_0",
+          "cmake": false
+        }
+      },
+      "version": "2.1.0"
+    },
+    {
+      "dependency": {
+        "id": "paper2_scotland2",
+        "versionRange": "=4.7.0",
+        "additionalData": {
+          "soLink": "https://github.com/Fernthedev/paperlog/releases/download/v4.7.0/libpaper2_scotland2.so",
+          "overrideSoName": "libpaper2_scotland2.so",
+          "modLink": "https://github.com/Fernthedev/paperlog/releases/download/v4.7.0/paper2_scotland2.qmod",
+          "branchName": "version/v4_7_0",
+          "compileOptions": {
+            "systemIncludes": [
+              "shared/utfcpp/source"
+            ]
+          },
+          "cmake": false
+        }
+      },
+      "version": "4.7.0"
+    },
+    {
+      "dependency": {
+        "id": "conditional-dependencies",
+        "versionRange": "=0.3.0",
+        "additionalData": {
+          "headersOnly": true,
+          "branchName": "version/v0_3_0",
+          "cmake": false
+        }
+      },
+      "version": "0.3.0"
+    },
+    {
+      "dependency": {
+        "id": "config-utils",
+        "versionRange": "=2.0.3",
+        "additionalData": {
+          "headersOnly": true,
+          "soLink": "https://github.com/darknight1050/config-utils/releases/download/v2.0.3/libconfig-utils_test.so",
+          "overrideSoName": "libconfig-utils_test.so",
+          "branchName": "version/v2_0_3",
+          "cmake": true
+        }
+      },
+      "version": "2.0.3"
     },
     {
       "dependency": {
@@ -363,35 +374,33 @@
     },
     {
       "dependency": {
-        "id": "scotland2",
-        "versionRange": "=0.1.7",
+        "id": "bsml",
+        "versionRange": "=0.4.55",
         "additionalData": {
-          "soLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.7/libsl2.so",
-          "debugSoLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.7/debug_libsl2.so",
-          "overrideSoName": "libsl2.so",
-          "branchName": "version/v0_1_7"
+          "soLink": "https://github.com/bsq-ports/Quest-BSML/releases/download/v0.4.55/libbsml.so",
+          "debugSoLink": "https://github.com/bsq-ports/Quest-BSML/releases/download/v0.4.55/debug_libbsml.so",
+          "overrideSoName": "libbsml.so",
+          "modLink": "https://github.com/bsq-ports/Quest-BSML/releases/download/v0.4.55/BSML.qmod",
+          "branchName": "version/v0_4_55",
+          "cmake": true
         }
       },
-      "version": "0.1.7"
+      "version": "0.4.55"
     },
     {
       "dependency": {
-        "id": "fmt",
-        "versionRange": "=11.0.2",
+        "id": "songcore",
+        "versionRange": "=1.1.26",
         "additionalData": {
-          "headersOnly": true,
-          "branchName": "version/v11_0_2",
-          "compileOptions": {
-            "systemIncludes": [
-              "fmt/include/"
-            ],
-            "cppFlags": [
-              "-DFMT_HEADER_ONLY"
-            ]
-          }
+          "soLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.26/libsongcore.so",
+          "debugSoLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.26/debug_libsongcore.so",
+          "overrideSoName": "libsongcore.so",
+          "modLink": "https://github.com/raineaeternal/Quest-SongCore/releases/download/v1.1.26/SongCore.qmod",
+          "branchName": "version/v1_1_26",
+          "cmake": true
         }
       },
-      "version": "11.0.2"
+      "version": "1.1.26"
     }
   ]
 }

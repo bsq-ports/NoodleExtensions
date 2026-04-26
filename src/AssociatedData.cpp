@@ -146,21 +146,8 @@ ParentTrackEventData::ParentTrackEventData(rapidjson::Value const& eventData, Be
                                                 : NoodleExtensions::Constants::PARENT_TRACK.data()]
                                        .GetString());
 
-  rapidjson::Value const& rawChildrenTracks = eventData[v2 ? NoodleExtensions::Constants::V2_CHILDREN_TRACKS.data()
-                                                           : NoodleExtensions::Constants::CHILDREN_TRACKS.data()];
-
-  if (rawChildrenTracks.IsArray()) {
-    childrenTracks.reserve(rawChildrenTracks.Size());
-    for (rapidjson::Value::ConstValueIterator itr = rawChildrenTracks.Begin(); itr != rawChildrenTracks.End(); itr++) {
-      TrackW child = beatmapAD.getTrack(itr->GetString());
-      // NELogger::Logger.debug("Assigning track {}(%p) to parent track {}(%p)", itr->GetString(), child,
-      // eventData["_parentTrack"].GetString(), track);
-      childrenTracks.emplace_back(child);
-    }
-  } else {
-    childrenTracks = { beatmapAD.getTrack(rawChildrenTracks.GetString()) };
-  }
-
+  childrenTracks = NEJSON::ReadOptionalTracks(eventData, v2 ? NoodleExtensions::Constants::V2_CHILDREN_TRACKS.data()
+                                              : NoodleExtensions::Constants::CHILDREN_TRACKS.data()).value_or(TracksAD::TracksVector{});
   offsetPosition = NEJSON::ReadOptionalVector3(eventData, v2 ? NoodleExtensions::Constants::V2_POSITION
                                                              : NoodleExtensions::Constants::OFFSET_POSITION);
   worldRotation = NEJSON::ReadOptionalRotation(eventData, v2 ? NoodleExtensions::Constants::V2_ROTATION

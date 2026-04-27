@@ -118,8 +118,9 @@ ObjectCustomData::ObjectCustomData(rapidjson::Value const& customData, CustomJSO
       scaleY = scale->at(1);
       scaleZ = scale->at(2);
     }
+
+    link = NEJSON::ReadOptionalString(customData, NoodleExtensions::Constants::LINK);
   }
-  link = NEJSON::ReadOptionalString(customData, NoodleExtensions::Constants::LINK);
 
   // TODO: MIRROR WIDTH AND OBSTACLE START X
 

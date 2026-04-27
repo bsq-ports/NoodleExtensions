@@ -44,7 +44,7 @@ using namespace TrackParenting;
 BeatmapObjectAssociatedData* noteUpdateAD = nullptr;
 TracksAD::TracksVector noteTracks;
 
-std::unordered_map<std::string_view, std::unordered_set<NoteController*>> linkedNotes;
+std::unordered_map<std::string, std::unordered_set<NoteController*>> linkedNotes;
 std::unordered_map<NoteController*, std::unordered_set<NoteController*>*> linkedLinkedNotes;
 
 CutoutEffect* NECaches::GetCutout(GlobalNamespace::NoteControllerBase* nc, NECaches::NoteCache& noteCache) {
@@ -111,6 +111,7 @@ void NECaches::ClearNoteCaches() {
 MAKE_HOOK_MATCH(NoteController_Init, &NoteController::Init, void, NoteController* self,
                 GlobalNamespace::NoteData* noteData, ByRef<GlobalNamespace::NoteSpawnData> noteSpawnData,
                 float_t endRotation, float_t uniformScale, bool rotateTowardsPlayer, bool useRandomRotation) {
+
   NoteController_Init(self, noteData, noteSpawnData, endRotation, uniformScale, rotateTowardsPlayer, useRandomRotation);
 
   if (!Hooks::isNoodleHookEnabled()) return;
@@ -386,6 +387,7 @@ MAKE_HOOK_MATCH(NoteController_ManualUpdate, &NoteController::ManualUpdate, void
 
 MAKE_HOOK_MATCH(NoteController_SendNoteWasCutEvent_LinkedNotes, &NoteController::SendNoteWasCutEvent, void,
                 NoteController* self, ByRef<::GlobalNamespace::NoteCutInfo> noteCutInfo) {
+
   NoteController_SendNoteWasCutEvent_LinkedNotes(self, noteCutInfo);
 
   if (!Hooks::isNoodleHookEnabled()) return;
@@ -398,7 +400,6 @@ MAKE_HOOK_MATCH(NoteController_SendNoteWasCutEvent_LinkedNotes, &NoteController:
   BeatmapObjectAssociatedData& ad = getAD(customNoteData->customData);
 
   auto link = ad.objectData.link;
-
   if (!link) return;
 
   auto& list = linkedNotes[*link];
@@ -433,6 +434,7 @@ MAKE_HOOK_MATCH(BeatmapObjectManager_Despawn_LinkedNotes,
                 static_cast<void (GlobalNamespace::BeatmapObjectManager::*)(::GlobalNamespace::NoteController*)>(
                     &GlobalNamespace::BeatmapObjectManager::Despawn),
                 void, BeatmapObjectManager* self, GlobalNamespace::NoteController* noteController) {
+
   BeatmapObjectManager_Despawn_LinkedNotes(self, noteController);
 
   if (!Hooks::isNoodleHookEnabled()) return;

@@ -147,7 +147,7 @@ ParentTrackEventData::ParentTrackEventData(rapidjson::Value const& eventData, Be
                                        .GetString());
 
   childrenTracks = NEJSON::ReadOptionalTracks(eventData, v2 ? NoodleExtensions::Constants::V2_CHILDREN_TRACKS.data()
-                                              : NoodleExtensions::Constants::CHILDREN_TRACKS.data()).value_or(TracksAD::TracksVector{});
+                                              : NoodleExtensions::Constants::CHILDREN_TRACKS.data(), beatmapAD).value_or(TracksAD::TracksVector{});
   offsetPosition = NEJSON::ReadOptionalVector3(eventData, v2 ? NoodleExtensions::Constants::V2_POSITION
                                                              : NoodleExtensions::Constants::OFFSET_POSITION);
   worldRotation = NEJSON::ReadOptionalRotation(eventData, v2 ? NoodleExtensions::Constants::V2_ROTATION

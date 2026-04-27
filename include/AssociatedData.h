@@ -122,7 +122,7 @@ struct PlayerTrackEventData {
 struct ParentTrackEventData {
   explicit ParentTrackEventData(rapidjson::Value const& eventData, TracksAD::BeatmapAssociatedData& beatmapAD, bool v2);
 
-  std::vector<TrackW> childrenTracks;
+  TracksAD::TracksVector childrenTracks;
   std::optional<NEVector::Vector3> offsetPosition;
   TrackW parentTrack;
   Tracks::TransformData transformData;

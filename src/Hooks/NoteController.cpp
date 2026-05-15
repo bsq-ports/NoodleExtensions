@@ -212,7 +212,7 @@ MAKE_HOOK_MATCH(NoteController_Init, &NoteController::Init, void, NoteController
   float startVerticalVelocity = jumpGravity * halfJumpDuration;
   float yOffset =
       (startVerticalVelocity * halfJumpDuration) - (jumpGravity * halfJumpDuration * halfJumpDuration * 0.5f);
-  ad.noteOffset = Vector3(jumpEndPos.x, jumpEndPos.y + yOffset, 0);
+  ad.noteOffset = Vector3(jumpEndPos.x, moveEndPos.y + yOffset, 0);
 
   self->Update();
 }

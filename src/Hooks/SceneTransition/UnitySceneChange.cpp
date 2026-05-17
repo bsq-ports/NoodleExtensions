@@ -9,8 +9,8 @@ using namespace UnityEngine;
 
 MAKE_HOOK_MATCH(SceneManager_Internal_ActiveSceneChanged, &UnityEngine::SceneManagement::SceneManager::Internal_ActiveSceneChanged,
                 void, UnityEngine::SceneManagement::Scene previousActiveScene, UnityEngine::SceneManagement::Scene newActiveScene) {
-  
-  if (previousActiveScene.IsValid() && previousActiveScene.name == "GameCore") {
+
+  if (newActiveScene.IsValid() && newActiveScene.name != "GameCore" && newActiveScene.name != "EmptyTransition") {
     Hooks::setNoodleHookEnabled(false);
   }
 

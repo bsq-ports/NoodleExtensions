@@ -34,11 +34,12 @@ MAKE_HOOK_MATCH(PlayerTransforms_Awake, &PlayerTransforms::Awake, void, PlayerTr
   self->_useOriginParentTransformForPseudoLocalCalculations = false;
 }
 MAKE_HOOK_MATCH(PlayerTransforms_HeadsetOffsetZ, &PlayerTransforms::Update, void, PlayerTransforms* self) {
-  if (!Hooks::isNoodleHookEnabled()) return PlayerTransforms_HeadsetOffsetZ(self);
-  if (self->_overrideHeadPos) return PlayerTransforms_HeadsetOffsetZ(self);
+  PlayerTransforms_HeadsetOffsetZ(self);
+  if (!Hooks::isNoodleHookEnabled()) return;
+  if (self->_overrideHeadPos) return;
 
   auto const& manager = TrackParenting::PlayerTrack::GetPlayerTracks();
-  if (manager.empty()) return PlayerTransforms_HeadsetOffsetZ(self);
+  if (manager.empty()) return;
 
   // ensure we have a valid parent transform
   if (!_parentTransform) {

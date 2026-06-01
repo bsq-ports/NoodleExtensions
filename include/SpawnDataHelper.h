@@ -61,7 +61,8 @@ constexpr float GetJumpDuration(std::optional<float> inputNjs, std::optional<flo
   float njs = inputNjs.value_or(NECaches::VariableMovementDataProvider->get_noteJumpSpeed());
   float spawnOffset = inputOffset.value_or(NECaches::InitData->noteJumpValue);
   auto valueType = NECaches::InitData->noteJumpValueType;
-  if (valueType == GlobalNamespace::BeatmapObjectSpawnMovementData::NoteJumpValueType::JumpDuration) {
+  if (valueType == GlobalNamespace::BeatmapObjectSpawnMovementData::NoteJumpValueType::JumpDuration &&
+      !inputNjs.has_value() && !inputOffset.has_value()) {
     return spawnOffset * 2.0f;
   }
 

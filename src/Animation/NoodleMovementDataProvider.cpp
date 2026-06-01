@@ -44,7 +44,9 @@ NoodleExtensions::NoodleMovementDataProvider::InitObject(GlobalNamespace::Beatma
 
   float njs = get_noteJumpSpeed();
   float spawnOffset = ad.objectData.noteJumpStartBeatOffset.value_or(noteJumpStartBeatOffset);
-  switch (noteJumpValueType) {
+  auto valueType = noteJumpSpeedOverride.has_value() || ad.objectData.noteJumpStartBeatOffset ?
+      GlobalNamespace::BeatmapObjectSpawnMovementData::NoteJumpValueType::BeatOffset : noteJumpValueType;
+  switch (valueType) {
   case GlobalNamespace::BeatmapObjectSpawnMovementData::NoteJumpValueType::JumpDuration: {
     jumpDurationOverride = spawnOffset * 2.0f;
     halfJumpDurationOverride = spawnOffset;

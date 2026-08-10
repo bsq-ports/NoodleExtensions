@@ -15,6 +15,7 @@
 #include "GlobalNamespace/CutoutEffect.hpp"
 #include "GlobalNamespace/DisappearingArrowControllerBase_1.hpp"
 #include "GlobalNamespace/GameNoteController.hpp"
+#include "GlobalNamespace/BurstSliderGameNoteController.hpp"
 #include "GlobalNamespace/BombNoteController.hpp"
 #include "GlobalNamespace/ConditionalMaterialSwitcher.hpp"
 #include "GlobalNamespace/BoxCuttableBySaber.hpp"
@@ -446,12 +447,21 @@ MAKE_HOOK_MATCH(BeatmapObjectManager_Despawn_LinkedNotes,
   }
 }
 
+MAKE_HOOK_MATCH(BurstSliderGameNoteController_ManualUpdate, &BurstSliderGameNoteController::ManualUpdate, void, BurstSliderGameNoteController* self) {
+  // TRANSPILE
+  static auto const* ManualUpdate = il2cpp_utils::il2cpp_type_check::MetadataGetter<&NoteController::ManualUpdate>::methodInfo();
+  il2cpp_utils::RunMethodRethrow<void, false>(self, ManualUpdate);
+  self->SetBigCuttableColliderSize();
+}
+
 void InstallNoteControllerHooks() {
   INSTALL_HOOK(NELogger::Logger, NoteController_Init);
   INSTALL_HOOK(NELogger::Logger, NoteController_ManualUpdate);
 
   INSTALL_HOOK(NELogger::Logger, NoteController_SendNoteWasCutEvent_LinkedNotes);
   INSTALL_HOOK(NELogger::Logger, BeatmapObjectManager_Despawn_LinkedNotes);
+
+  INSTALL_HOOK(NELogger::Logger, BurstSliderGameNoteController_ManualUpdate);
 }
 
 NEInstallHooks(InstallNoteControllerHooks);

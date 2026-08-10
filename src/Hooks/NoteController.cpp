@@ -187,8 +187,8 @@ MAKE_HOOK_MATCH(NoteController_Init, &NoteController::Init, void, NoteController
 
   auto scale = NEVector::Vector3(ad.objectData.scaleX.value_or(1.0f), ad.objectData.scaleY.value_or(1.0f),
                                  ad.objectData.scaleZ.value_or(1.0f));
-  ad.internalScale = scale;
   transform->set_localScale(scale);
+  ad.internalScale = scale;
 
   Vector3 moveStartPos = noteSpawnData->moveStartOffset;
   Vector3 moveEndPos = noteSpawnData->moveEndOffset;

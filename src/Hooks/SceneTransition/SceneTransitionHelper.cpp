@@ -114,4 +114,5 @@ void SceneTransitionHelper::Patch(SongCore::SongLoader::CustomBeatmapLevel* beat
 
   NECaches::ClearNoteCaches();
   NECaches::ClearObstacleCaches();
+  NECaches::ClearSliderCaches();
 }

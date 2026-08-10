@@ -62,4 +62,11 @@ inline std::optional<float> getTimeProp(std::span<TrackW const> tracks) {
   
   return timeProperty.GetFloat();
 }
+
+// Port of MathF.Approximately
+inline bool Approximately(float a, float b) {
+  float const epsilon = 1.17549435E-38f * 8.0f;
+  float const maxAbs = std::max(std::fabs(a), std::fabs(b));
+  return std::fabs(b - a) < std::max(1E-06f * maxAbs, epsilon);
+}
 } // namespace NoodleExtensions

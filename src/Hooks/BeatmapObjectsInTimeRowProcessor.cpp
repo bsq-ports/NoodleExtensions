@@ -17,14 +17,9 @@
 
 using namespace GlobalNamespace;
 using namespace CustomJSONData;
+using namespace NoodleExtensions;
 
 #include <cmath>
-// Port of MathF.Approximately
-bool Approximately(float a, float b) {
-  float const epsilon = 1.17549435E-38f * 8.0f;
-  float const maxAbs = std::max(std::fabs(a), std::fabs(b));
-  return std::fabs(b - a) < std::max(1E-06f * maxAbs, epsilon);
-}
 
 void BeatmapObjectsInTimeRowProcessor_HandleCurrentTimeSliceAllNotesAndSlidersDidFinishTimeSliceTranspile(
     BeatmapObjectsInTimeRowProcessor* self,

@@ -17,7 +17,7 @@ MAKE_HOOK_MATCH(SetSaberAttraction, &SliderController::SetSaberAttraction, void,
   }
 }
 
-void InstallSliderControllerHooks() {
+void InstallFakeSliderControllerHooks() {
   INSTALL_HOOK(NELogger::Logger, SetSaberAttraction);
 }
-NEInstallHooks(InstallSliderControllerHooks);
+NEInstallHooks(InstallFakeSliderControllerHooks);

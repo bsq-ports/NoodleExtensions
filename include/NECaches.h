@@ -23,6 +23,7 @@ template <typename T> class DisappearingArrowControllerBase_1;
 class ObstacleDissolve;
 class ObstacleControllerBase;
 class CutoutAnimateEffect;
+class SliderMovement;
 } // namespace GlobalNamespace
 
 namespace Zenject {
@@ -79,8 +80,17 @@ public:
     bool dissolveEnabled;
   };
 
+  struct SliderCache {
+    constexpr SliderCache(SliderCache&&) = default;
+    // SliderCache(SliderCache const&) = default;
+    constexpr SliderCache() = default;
+
+    GlobalNamespace::CutoutAnimateEffect* cutoutAnimateEffect{};
+  };
+
   static inline std::unordered_map<GlobalNamespace::NoteControllerBase*, NECaches::NoteCache> noteCache;
   static inline std::unordered_map<GlobalNamespace::ObstacleControllerBase*, NECaches::ObstacleCache> obstacleCache;
+  static inline std::unordered_map<GlobalNamespace::SliderMovement*, NECaches::SliderCache> sliderCache;
 
   static inline NECaches::NoteCache& getNoteCache(GlobalNamespace::NoteControllerBase* note) {
     return noteCache[note];
@@ -90,8 +100,13 @@ public:
     return obstacleCache[obstacle];
   }
 
+  static inline NECaches::SliderCache& getSliderCache(GlobalNamespace::SliderMovement* slider) {
+    return sliderCache[slider];
+  }
+
   static void ClearObstacleCaches();
   static void ClearNoteCaches();
+  static void ClearSliderCaches();
 
   static GlobalNamespace::CutoutEffect* GetCutout(GlobalNamespace::NoteControllerBase* nc,
                                                   NECaches::NoteCache& noteCache);

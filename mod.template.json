@@ -6,7 +6,7 @@
   "version": "${version}",
   "coverImage": "cover.png",
   "packageId": "com.beatgames.beatsaber",
-  "packageVersion": "1.40.8_7379",
+  "packageVersion": "1.45.3_30054",
   "description": "This adds a host of new things you can do with your maps. Original mod for PC by Aeroluna. Contributions by Fern and Sc2ad.",
   "modFiles": [],
   "lateModFiles": ["${binary}"],

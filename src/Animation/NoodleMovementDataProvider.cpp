@@ -19,9 +19,9 @@ NoodleExtensions::NoodleMovementDataProvider::InitObject(GlobalNamespace::Beatma
   moveEndPositionOverride = std::nullopt;
   jumpEndPositionOverride = std::nullopt;
 
-  static auto* customObstacleDataClass = classof(CustomJSONData::CustomObstacleData*);
-  static auto* customNoteDataClass = classof(CustomJSONData::CustomNoteData*);
-  static auto* customSliderDataClass = classof(CustomJSONData::CustomSliderData*);
+  static auto* customObstacleDataClass = i2c::class_of<CustomJSONData::CustomObstacleData*>();
+  static auto* customNoteDataClass = i2c::class_of<CustomJSONData::CustomNoteData*>();
+  static auto* customSliderDataClass = i2c::class_of<CustomJSONData::CustomSliderData*>();
 
   if (!beatmapObjectData) return this;
 

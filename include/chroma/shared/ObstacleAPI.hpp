@@ -1,3 +1,4 @@
+#include "beatsaber-hook/shared/callback.hpp"
 #pragma once
 
 #include "UnityEngine/Color.hpp"
@@ -78,7 +79,7 @@ public:
   /// This retrieves the callback used for Saber Color changed.
   ///
   /// \return
-  using ObstacleCallback = UnorderedEventCallback<GlobalNamespace::ObstacleControllerBase*, Sombrero::FastColor const&>;
+  using ObstacleCallback = unordered_event_callback<GlobalNamespace::ObstacleControllerBase*, Sombrero::FastColor const&>;
   static std::optional<std::reference_wrapper<ObstacleCallback>> getObstacleChangedColorCallbackSafe() {
     static auto function = CondDeps::Find<ObstacleCallback*>(CHROMA_ID, "getObstacleChangedColorCallbackSafe");
 

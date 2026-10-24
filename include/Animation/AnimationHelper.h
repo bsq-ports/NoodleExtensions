@@ -1,5 +1,5 @@
 #pragma once
-#include "beatsaber-hook/shared/config/rapidjson-utils.hpp"
+#include "beatsaber-hook/shared/rapidjson.hpp"
 
 #include "tracks/shared/Animation/Track.h"
 

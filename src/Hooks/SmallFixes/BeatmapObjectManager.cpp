@@ -1,5 +1,8 @@
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
 #include "GlobalNamespace/BeatmapObjectManager.hpp"
 #include "GlobalNamespace/BasicBeatmapObjectManager.hpp"
@@ -19,7 +22,7 @@ using namespace GlobalNamespace;
 using namespace UnityEngine;
 
 static bool GetHiddenForType(BeatmapObjectManager* beatmapObjectManager) {
-  if (il2cpp_utils::AssignableFrom<BasicBeatmapObjectManager*>(beatmapObjectManager->klass)) {
+  if (i2c::functions::class_is_assignable_from(i2c::class_of<BasicBeatmapObjectManager*>(), beatmapObjectManager->klass)) {
     return true;
   }
 
@@ -50,9 +53,9 @@ MAKE_HOOK_MATCH(BeatmapObjectManager_SpawnObstacle, &BeatmapObjectManager::AddSp
 
   // POST FIX
   auto customObstacleData =
-      il2cpp_utils::try_cast<CustomJSONData::CustomObstacleData>(obstacleController->_obstacleData);
-  if (customObstacleData && customObstacleData.value()->customData) {
-    BeatmapObjectAssociatedData& ad = getAD(customObstacleData.value()->customData);
+      i2c::try_cast<CustomJSONData::CustomObstacleData*>(obstacleController->_obstacleData);
+  if (customObstacleData && customObstacleData->customData) {
+    BeatmapObjectAssociatedData& ad = getAD(customObstacleData->customData);
     ad.doUnhide = true;
   }
 

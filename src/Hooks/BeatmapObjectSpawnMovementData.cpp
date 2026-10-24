@@ -1,6 +1,9 @@
 #include "NECaches.h"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
 
 #include "GlobalNamespace/BeatmapData.hpp"
 #include "GlobalNamespace/BeatmapEventData.hpp"
@@ -36,7 +39,7 @@ MAKE_HOOK_MATCH(GetSliderSpawnData, &BeatmapObjectSpawnMovementData::GetSliderSp
 
   if (!Hooks::isNoodleHookEnabled()) return GetSliderSpawnData(self, normalSliderData);
 
-  if (!il2cpp_utils::AssignableFrom<CustomJSONData::CustomSliderData*>(normalSliderData->klass))
+  if (!i2c::functions::class_is_assignable_from(i2c::class_of<CustomJSONData::CustomSliderData*>(), normalSliderData->klass))
     return GetSliderSpawnData(self, normalSliderData);
 
   auto* sliderData = reinterpret_cast<CustomJSONData::CustomSliderData*>(normalSliderData);
@@ -77,7 +80,7 @@ MAKE_HOOK_MATCH(GetObstacleSpawnData, &BeatmapObjectSpawnMovementData::GetObstac
                 BeatmapObjectSpawnMovementData* self, ObstacleData* normalObstacleData) {
   if (!Hooks::isNoodleHookEnabled()) return GetObstacleSpawnData(self, normalObstacleData);
 
-  if (!il2cpp_utils::AssignableFrom<CustomJSONData::CustomObstacleData*>(normalObstacleData->klass))
+  if (!i2c::functions::class_is_assignable_from(i2c::class_of<CustomJSONData::CustomObstacleData*>(), normalObstacleData->klass))
     return GetObstacleSpawnData(self, normalObstacleData);
 
   auto* obstacleData = reinterpret_cast<CustomJSONData::CustomObstacleData*>(normalObstacleData);
@@ -99,13 +102,15 @@ MAKE_HOOK_MATCH(GetObstacleSpawnData, &BeatmapObjectSpawnMovementData::GetObstac
   std::optional<float> height = ad.objectData.height;
   std::optional<float> width = ad.objectData.width;
 
+  float const layerHeight = StaticBeatmapObjectSpawnMovementData::LineYPosForLineLayer(NoteLineLayer::Upper) -
+                            StaticBeatmapObjectSpawnMovementData::LineYPosForLineLayer(NoteLineLayer::Base);
   float obstacleHeight;
   if (height.has_value()) {
-    obstacleHeight = height.value() * GlobalNamespace::StaticBeatmapObjectSpawnMovementData::get_layerHeight();
+    obstacleHeight = height.value() * layerHeight;
   } else {
     // _topObstaclePosY =/= _obstacleTopPosY
     obstacleHeight =
-        std::min(obstacleData->height * GlobalNamespace::StaticBeatmapObjectSpawnMovementData::get_layerHeight(),
+        std::min(obstacleData->height * layerHeight,
                  self->_obstacleTopPosY - obstacleOffset.y);
   }
 
@@ -124,10 +129,10 @@ MAKE_HOOK_MATCH(GetJumpingNoteSpawnData, &BeatmapObjectSpawnMovementData::GetJum
                 BeatmapObjectSpawnMovementData* self, NoteData* normalNoteData) {
   if (!Hooks::isNoodleHookEnabled()) return GetJumpingNoteSpawnData(self, normalNoteData);
 
-  auto noteDataCast = il2cpp_utils::try_cast<CustomJSONData::CustomNoteData>(normalNoteData);
+  auto noteDataCast = i2c::try_cast<CustomJSONData::CustomNoteData*>(normalNoteData);
   if (!noteDataCast) return GetJumpingNoteSpawnData(self, normalNoteData);
 
-  auto noteData = *noteDataCast;
+  auto noteData = noteDataCast;
   if (!noteData->customData) {
     return GetJumpingNoteSpawnData(self, normalNoteData);
   }

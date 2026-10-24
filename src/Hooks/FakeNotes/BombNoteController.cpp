@@ -1,5 +1,8 @@
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
 #include "GlobalNamespace/BombNoteController.hpp"
 #include "GlobalNamespace/CuttableBySaber.hpp"
@@ -10,7 +13,7 @@
 
 using namespace GlobalNamespace;
 
-MAKE_HOOK_MATCH(BombNoteController_Init, &BombNoteController::Init, void, BombNoteController* self, NoteData* noteData, ByRef<GlobalNamespace::NoteSpawnData> noteSpawnData) {
+MAKE_HOOK_MATCH(BombNoteController_Init, &BombNoteController::Init, void, BombNoteController* self, NoteData* noteData, by_ref<GlobalNamespace::NoteSpawnData const> noteSpawnData) {
   BombNoteController_Init(self, noteData, noteSpawnData);
   if (!Hooks::isNoodleHookEnabled()) return;
 

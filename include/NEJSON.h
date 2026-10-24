@@ -1,4 +1,4 @@
-#include "beatsaber-hook/shared/config/rapidjson-utils.hpp"
+#include "beatsaber-hook/shared/rapidjson.hpp"
 #include "tracks/shared/Vector.h"
 #include "NELogger.h"
 

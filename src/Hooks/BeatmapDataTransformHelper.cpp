@@ -1,6 +1,9 @@
 #include "Constants.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
 
 #include "GlobalNamespace/IJumpOffsetYProvider.hpp"
 #include "GlobalNamespace/PlayerHeightDetector.hpp"
@@ -45,8 +48,8 @@ using namespace System::Collections::Generic;
 // IReadonlyBeatmapData *ReorderLineData(IReadonlyBeatmapData *beatmapData) {
 //    auto *customBeatmapData = static_cast<CustomJSONData::CustomBeatmapData *>(beatmapData->GetCopy());
 //    if (!customObstacleDataClass) {
-//        customObstacleDataClass = classof(CustomJSONData::CustomObstacleData *);
-//        customNoteDataClass = classof(CustomJSONData::CustomNoteData *);
+//        customObstacleDataClass = i2c::class_of<CustomJSONData::CustomObstacleData *>();
+//        customNoteDataClass = i2c::class_of<CustomJSONData::CustomNoteData *>();
 //    }
 //
 //
@@ -74,9 +77,9 @@ SortAndOrderList(CustomJSONData::CustomBeatmapData* beatmapData);
 void LoadNoodleObjects(CustomJSONData::CustomBeatmapData* beatmap) {
   NELogger::Logger.info("BeatmapData klass name is {}", beatmap->klass->name);
 
-  static auto* customObstacleDataClass = classof(CustomJSONData::CustomObstacleData*);
-  static auto* customNoteDataClass = classof(CustomJSONData::CustomNoteData*);
-  static auto* customSliderDataClass = classof(CustomJSONData::CustomSliderData*);
+  static auto* customObstacleDataClass = i2c::class_of<CustomJSONData::CustomObstacleData*>();
+  static auto* customNoteDataClass = i2c::class_of<CustomJSONData::CustomNoteData*>();
+  static auto* customSliderDataClass = i2c::class_of<CustomJSONData::CustomSliderData*>();
 
   TracksAD::BeatmapAssociatedData& beatmapAD = TracksAD::getBeatmapAD(beatmap->customData);
 
@@ -95,11 +98,11 @@ void LoadNoodleObjects(CustomJSONData::CustomBeatmapData* beatmap) {
 
   for (BeatmapObjectData* beatmapObjectData : beatmap->beatmapObjectDatas) {
     CustomJSONData::CustomNoteData* noteData =
-        il2cpp_utils::try_cast<CustomJSONData::CustomNoteData>(beatmapObjectData).value_or(nullptr);
+        i2c::try_cast<CustomJSONData::CustomNoteData*>(beatmapObjectData);
     CustomJSONData::CustomObstacleData* obstacleData =
-        il2cpp_utils::try_cast<CustomJSONData::CustomObstacleData>(beatmapObjectData).value_or(nullptr);
+        i2c::try_cast<CustomJSONData::CustomObstacleData*>(beatmapObjectData);
     CustomJSONData::CustomSliderData* sliderData =
-        il2cpp_utils::try_cast<CustomJSONData::CustomSliderData>(beatmapObjectData).value_or(nullptr);
+        i2c::try_cast<CustomJSONData::CustomSliderData*>(beatmapObjectData);
     CustomJSONData::JSONWrapper* customDataWrapper = nullptr;
     if (obstacleData) {
       customDataWrapper = obstacleData->customData;
@@ -203,29 +206,28 @@ void LoadNoodleEvents(CustomJSONData::CustomBeatmapData* beatmap) {
 
 MAKE_HOOK_MATCH(BeatmapDataTransformHelper_CreateTransformedBeatmapData,
                 &BeatmapDataTransformHelper::CreateTransformedBeatmapData, IReadonlyBeatmapData*,
-                ::GlobalNamespace::IReadonlyBeatmapData* beatmapData, ::GlobalNamespace::BeatmapLevel* beatmapLevel,
-                ::GlobalNamespace::GameplayModifiers* gameplayModifiers, bool leftHanded,
-                ::GlobalNamespace::EnvironmentEffectsFilterPreset environmentEffectsFilterPreset,
-                ::GlobalNamespace::EnvironmentIntensityReductionOptions* environmentIntensityReductionOptions,
-                ::ByRef<::BeatSaber::Settings::Settings> settings) {
-  auto result = BeatmapDataTransformHelper_CreateTransformedBeatmapData(beatmapData, beatmapLevel, gameplayModifiers,
-                                                                        leftHanded, environmentEffectsFilterPreset,
-                                                                        environmentIntensityReductionOptions, settings);
+                ::GlobalNamespace::IReadonlyBeatmapData* beatmapData, ::GlobalNamespace::BeatmapKey beatmapKey,
+                ::GlobalNamespace::BeatmapLevel* beatmapLevel, ::GlobalNamespace::GameplayModifiers* gameplayModifiers,
+                ::GlobalNamespace::PlayerSpecificSettings* playerSpecificSettings,
+                ::GlobalNamespace::EnvironmentInfoSO* originalEnvironmentInfo, bool screenDisplacementEffects) {
+  auto result = BeatmapDataTransformHelper_CreateTransformedBeatmapData(
+      beatmapData, beatmapKey, beatmapLevel, gameplayModifiers, playerSpecificSettings, originalEnvironmentInfo,
+      screenDisplacementEffects);
 
   if (!Hooks::isNoodleHookEnabled()) return result;
 
-  if (auto customBeatmap = il2cpp_utils::try_cast<CustomJSONData::CustomBeatmapData>(result)) {
-    auto& beatmapAD = TracksAD::getBeatmapAD(customBeatmap.value()->customData);
+  if (auto customBeatmap = i2c::try_cast<CustomJSONData::CustomBeatmapData*>(result)) {
+    auto& beatmapAD = TracksAD::getBeatmapAD(customBeatmap->customData);
 
     if (!beatmapAD.valid) {
-      TracksAD::readBeatmapDataAD(*customBeatmap);
+      TracksAD::readBeatmapDataAD(customBeatmap);
     }
 
-    LoadNoodleObjects(*customBeatmap);
-    LoadNoodleEvents(*customBeatmap);
+    LoadNoodleObjects(customBeatmap);
+    LoadNoodleEvents(customBeatmap);
 
     NECaches::hasLocalSpaceTrail = false;
-    auto customData = customBeatmap.value()->customData;
+    auto customData = customBeatmap->customData;
     if (customData != nullptr) {
       if (customData->value.has_value()) {
         auto localSpaceTrail =

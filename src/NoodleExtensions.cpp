@@ -1,3 +1,4 @@
+#include "beatsaber-hook/shared/safeptr.hpp"
 #include "Animation/Events.h"
 #include "NEHooks.h"
 #include "NECaches.h"
@@ -17,12 +18,12 @@ GlobalNamespace::BeatmapObjectSpawnMovementData::NoteJumpValueType NECaches::not
 bool NECaches::hasLocalSpaceTrail;
 bool NECaches::hasPlayerTransfrom;
 bool NECaches::LeftHandedMode;
-SafePtr<Zenject::DiContainer> NECaches::GameplayCoreContainer;
-// SafePtr<CustomJSONData::CustomBeatmapData> NECaches::customBeatmapData;
-SafePtr<GlobalNamespace::IJumpOffsetYProvider> NECaches::JumpOffsetYProvider;
-SafePtr<GlobalNamespace::VariableMovementDataProvider> NECaches::VariableMovementDataProvider;
-SafePtr<GlobalNamespace::BeatmapObjectSpawnController::InitData> NECaches::InitData;
-SafePtr<GlobalNamespace::BeatmapObjectSpawnController>  NECaches::beatmapObjectSpawnController;
+safe_ptr<Zenject::DiContainer*> NECaches::GameplayCoreContainer;
+// safe_ptr<CustomJSONData::CustomBeatmapData*> NECaches::customBeatmapData;
+safe_ptr<GlobalNamespace::IJumpOffsetYProvider*> NECaches::JumpOffsetYProvider;
+safe_ptr<GlobalNamespace::VariableMovementDataProvider*> NECaches::VariableMovementDataProvider;
+safe_ptr<GlobalNamespace::BeatmapObjectSpawnController::InitData*> NECaches::InitData;
+safe_ptr<GlobalNamespace::BeatmapObjectSpawnController*>  NECaches::beatmapObjectSpawnController;
 std::shared_ptr<NoodleExtensions::Pool::NoodleMovementDataProviderPool> NECaches::noodleMovementDataProviderPool;
 
 void InstallAndRegisterAll() {

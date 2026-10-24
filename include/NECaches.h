@@ -1,8 +1,10 @@
+#include "beatsaber-hook/shared/safeptr.hpp"
 #pragma once
 #include "GlobalNamespace/BeatmapObjectSpawnMovementData.hpp"
 #include "GlobalNamespace/BeatmapObjectSpawnController.hpp"
 #include "GlobalNamespace/IJumpOffsetYProvider.hpp"
 #include "GlobalNamespace/VariableMovementDataProvider.hpp"
+#include "Zenject/DiContainer.hpp"
 #include "NEObjectPool.hpp"
 #include "sombrero/shared/ColorUtils.hpp"
 #include "custom-json-data/shared/CustomBeatmapData.h"
@@ -36,12 +38,12 @@ public:
   static float noteJumpStartBeatOffset;
   static float beatsPerMinute;
   static float numberOfLines;
-  static SafePtr<Zenject::DiContainer> GameplayCoreContainer;
-  static SafePtr<GlobalNamespace::IJumpOffsetYProvider> JumpOffsetYProvider;
-  static SafePtr<GlobalNamespace::VariableMovementDataProvider> VariableMovementDataProvider;
-  static SafePtr<GlobalNamespace::BeatmapObjectSpawnController::InitData> InitData;
-  static SafePtr<GlobalNamespace::BeatmapObjectSpawnController> beatmapObjectSpawnController;
-  static SafePtr<CustomJSONData::CustomBeatmapData> customBeatmapData;
+  static safe_ptr<Zenject::DiContainer*> GameplayCoreContainer;
+  static safe_ptr<GlobalNamespace::IJumpOffsetYProvider*> JumpOffsetYProvider;
+  static safe_ptr<GlobalNamespace::VariableMovementDataProvider*> VariableMovementDataProvider;
+  static safe_ptr<GlobalNamespace::BeatmapObjectSpawnController::InitData*> InitData;
+  static safe_ptr<GlobalNamespace::BeatmapObjectSpawnController*> beatmapObjectSpawnController;
+  static safe_ptr<CustomJSONData::CustomBeatmapData*> customBeatmapData;
   static GlobalNamespace::BeatmapObjectSpawnMovementData::NoteJumpValueType noteJumpValueType;
   static std::shared_ptr<NoodleExtensions::Pool::NoodleMovementDataProviderPool> noodleMovementDataProviderPool;
   static float noteJumpValue;

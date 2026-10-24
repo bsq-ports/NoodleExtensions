@@ -2,7 +2,7 @@
 
 #include "GlobalNamespace/BeatmapData.hpp"
 #include "NELogger.h"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
 #include "GlobalNamespace/BeatmapDataLoader.hpp"
 #include "GlobalNamespace/BeatmapDataBasicInfo.hpp"
@@ -50,10 +50,10 @@ template <typename T> static bool IsFake(T* o, bool v2) {
 template <typename U, typename T> auto FakeCount(ArrayW<T> list, bool v2) {
   int i = list.size();
   for (auto o : list) {
-    auto note = il2cpp_utils::try_cast<U>(o);
+    auto note = i2c::try_cast<U*>(o);
     if (!note) continue;
 
-    if (IsFake(*note, v2)) i--;
+    if (IsFake(note, v2)) i--;
   }
 
   return i;
@@ -115,7 +115,7 @@ MAKE_HOOK_MATCH(V3_BeatmapDataLoader_GetBeatmapDataFromSaveData,
       beatmapSaveData, defaultLightshowSaveData, beatmapDifficulty, startBpm, loadingForDesignatedEnvironment,
       environmentKeywords, environmentLightGroups, playerSpecificSettings, lightEventConverter, stopwatch);
 
-  auto customBeatmap = il2cpp_utils::try_cast<CustomBeatmapData>(beatmap).value_or(nullptr);
+  auto customBeatmap = i2c::try_cast<CustomBeatmapData*>(beatmap);
   if (!customBeatmap || !customBeatmap->customData->value) {
     return beatmap;
   }
@@ -207,7 +207,7 @@ void InstallBeatmapDataHooks(){
   INSTALL_HOOK(NELogger::Logger, V2_BeatmapDataLoader_GetBeatmapDataBasicInfoFromSaveDataJson)
       INSTALL_HOOK(NELogger::Logger, V3_BeatmapDataLoader_GetBeatmapDataFromSaveData)
 
-  // v3::Parser::ParsedEvent.addCallback(HandleFakeV3Objects);
+  // v3::Parser::ParsedEvent.add(HandleFakeV3Objects);
 }
 
 NEInstallHooks(InstallBeatmapDataHooks);

@@ -1,5 +1,8 @@
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
 #include "GlobalNamespace/GameplayCoreInstaller.hpp"
 #include "GlobalNamespace/GameplayCoreSceneSetupData.hpp"
@@ -30,7 +33,7 @@ MAKE_HOOK_MATCH(InstallBindings, &GameplayCoreInstaller::InstallBindings, void, 
 
   BeatmapObjectSpawnControllerHelpers::GetNoteJumpValues(
       self->_sceneSetupData->playerSpecificSettings, difficultyBeatmap->noteJumpStartBeatOffset,
-      ByRef(NECaches::noteJumpValueType), ByRef(NECaches::noteJumpValue));
+      by_ref(NECaches::noteJumpValueType), by_ref(NECaches::noteJumpValue));
 
   NECaches::noteJumpStartBeatOffset = difficultyBeatmap->noteJumpStartBeatOffset +
                                       self->_sceneSetupData->playerSpecificSettings->noteJumpStartBeatOffset;
@@ -41,7 +44,7 @@ MAKE_HOOK_MATCH(InstallBindings, &GameplayCoreInstaller::InstallBindings, void, 
 
   NECaches::GameplayCoreContainer = self->Container;
   // NECaches::customBeatmapData =
-  //     il2cpp_utils::cast<CustomJSONData::CustomBeatmapData>(self->_sceneSetupData->get_transformedBeatmapData());
+  //     i2c::cast<CustomJSONData::CustomBeatmapData*>(self->_sceneSetupData->get_transformedBeatmapData());
 
   {
     // https://github.com/Aeroluna/Heck/blob/master/NoodleExtensions/HarmonyPatches/SmallFixes/InitializedSpawnMovementData.cs

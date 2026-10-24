@@ -35,5 +35,6 @@ if (($clean.IsPresent) -or (-not (Test-Path -Path "build")))
 $buildType = if ($release.IsPresent) { "RelWithDebInfo" } else { "Debug" }
 
 & cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE="$buildType" .
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 & cmake --build ./build 
 exit $LASTEXITCODE

@@ -3,8 +3,11 @@
 
 #include "tracks/shared/Vector.h"
 
-#include "beatsaber-hook/shared/utils/hooking.hpp"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
 
 #include "GlobalNamespace/ObstacleSaberSparkleEffectManager.hpp"
 #include "GlobalNamespace/ObstacleController.hpp"
@@ -25,7 +28,7 @@ using namespace NoodleExtensions;
 /*MAKE_HOOK_MATCH(ObstacleSaberSparkleEffectManager_GetBurnMarkPos, &ObstacleSaberSparkleEffectManager::GetBurnMarkPos,
                 bool, ObstacleSaberSparkleEffectManager* self, UnityEngine::Bounds bounds,
                 UnityEngine::Transform* transform, UnityEngine::Vector3 bladeBottomPos,
-                UnityEngine::Vector3 bladeTopPos, ByRef<UnityEngine::Vector3> burnMarkPos) {
+                UnityEngine::Vector3 bladeTopPos, by_ref<UnityEngine::Vector3> burnMarkPos) {
   if (!Hooks::isNoodleHookEnabled())
     return ObstacleSaberSparkleEffectManager_GetBurnMarkPos(self, bounds, transform, bladeBottomPos, bladeTopPos,
                                                             burnMarkPos);

@@ -1,5 +1,8 @@
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
 #include "GlobalNamespace/ObstacleData.hpp"
 
@@ -11,7 +14,7 @@
 using namespace GlobalNamespace;
 
 MAKE_HOOK_MATCH(ObstacleData_Mirror, &ObstacleData::Mirror, void, ObstacleData* self, int lineCount) {
-  static auto CustomObstacleDataKlass = classof(CustomJSONData::CustomObstacleData*);
+  static auto CustomObstacleDataKlass = i2c::class_of<CustomJSONData::CustomObstacleData*>();
   if (self->klass != CustomObstacleDataKlass) {
     return ObstacleData_Mirror(self, lineCount);
   }

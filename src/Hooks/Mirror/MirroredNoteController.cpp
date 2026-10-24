@@ -1,5 +1,8 @@
-#include "beatsaber-hook/shared/utils/hooking.hpp"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
 
 #include "GlobalNamespace/MirroredNoteController_1.hpp"
 #include "GlobalNamespace/MirroredGameNoteController.hpp"
@@ -31,11 +34,10 @@ using MirroredNote = MirroredNoteController_1<INoteMirrorable*>;
 using MirroredGameNote = MirroredNoteController_1<IGameNoteMirrorable*>;
 
 template <>
-struct ::il2cpp_utils::il2cpp_type_check::MetadataGetter<
+struct ::i2c::metadata_getter<
     &MirroredNoteController_1<Il2CppObject*>::UpdatePositionAndRotation> {
-  static MethodInfo const* get() {
-    return il2cpp_utils::FindMethodUnsafe(classof(MirroredNoteController_1<Il2CppObject*>*),
-                                          "UpdatePositionAndRotation", 0);
+  static MethodInfo const* method_info() {
+    return i2c::find_method(i2c::class_of<MirroredNoteController_1<Il2CppObject*>*>(), {"UpdatePositionAndRotation", 0});
   }
 };
 
@@ -123,11 +125,11 @@ static void UpdateMirror(Transform* mirroredNoteTransform, Transform* followedOb
     if (cutoutEffect) cutoutEffect->SetCutout(followedCutoutEffect->_cutout);
   }
 
-  static auto MirrorKlass = classof(GlobalNamespace::MirroredGameNoteController*);
-  static auto GameKlass = classof(GameNoteController*);
+  static auto MirrorKlass = i2c::class_of<GlobalNamespace::MirroredGameNoteController*>();
+  static auto GameKlass = i2c::class_of<GameNoteController*>();
 
-  if (il2cpp_functions::class_is_assignable_from(GameKlass, followedNote->klass) &&
-      il2cpp_functions::class_is_assignable_from(MirrorKlass, mirroredNoteController->klass)) {
+  if (i2c::functions::class_is_assignable_from(GameKlass, followedNote->klass) &&
+      i2c::functions::class_is_assignable_from(MirrorKlass, mirroredNoteController->klass)) {
     auto disappearingArrowController =
         NECaches::GetDisappearingArrowController((MirroredGameNoteController*)mirroredNoteController, mirrorCache);
 
@@ -142,22 +144,22 @@ static void UpdateMirror(Transform* mirroredNoteTransform, Transform* followedOb
 }
 
 #define MIRROR_HOOK(name, generic)                                                                                     \
-  MAKE_HOOK_FIND_INSTANCE(name##_Mirror, classof(MirroredNoteController_1<generic*>*), "Mirror", void,                 \
+  MAKE_HOOK(name##_Mirror, (i2c::class_of<MirroredNoteController_1<generic*>*>(), "Mirror", true), void,                 \
                           MirroredNoteController_1<generic*>* self, generic* noteController) {                         \
     initMirror = true;                                                                                                 \
     name##_Mirror(self, noteController);                                                                               \
     initMirror = false;                                                                                                \
     if (!Hooks::isNoodleHookEnabled()) return;                                                                         \
     auto* followedNote = reinterpret_cast<GameNoteController*>(self->followedNote);                                    \
-    auto customNoteData = il2cpp_utils::try_cast<CustomJSONData::CustomNoteData>(followedNote->_noteData);              \
+    auto customNoteData = i2c::try_cast<CustomJSONData::CustomNoteData*>(followedNote->_noteData);              \
                                                                                                                        \
     if (customNoteData) {                                                                                              \
-      BeatmapObjectAssociatedData& ad = getAD(customNoteData.value()->customData);                                     \
+      BeatmapObjectAssociatedData& ad = getAD(customNoteData->customData);                                     \
       if (!ad.mirror) {                                                                                                \
         self->Hide(true);                                                                                              \
         return;                                                                                                        \
       }                                                                                                                \
-      AddToTrack(customNoteData.value(), self->get_gameObject());                                                      \
+      AddToTrack(customNoteData, self->get_gameObject());                                                      \
     }                                                                                                                  \
   }
 
@@ -166,7 +168,7 @@ MIRROR_HOOK(MirroredGameNote, IGameNoteMirrorable)
 
 // I love generics and il2cpp
 // MirroredNoteController_1_System_Object__UpdatePositionAndRotation
-MAKE_HOOK(Mirror_UpdatePositionAndRotation, nullptr, void, MirroredNoteController_1<Il2CppObject*>* self,
+MAKE_HOOK(Mirror_UpdatePositionAndRotation, (nullptr), void, MirroredNoteController_1<Il2CppObject*>* self,
           MethodInfo* methodInfo) {
   if (!Hooks::isNoodleHookEnabled()) return Mirror_UpdatePositionAndRotation(self, methodInfo);
   if (!CheckSkip(self->_noteTransform, self->_followedNoteTransform)) {
@@ -174,16 +176,16 @@ MAKE_HOOK(Mirror_UpdatePositionAndRotation, nullptr, void, MirroredNoteControlle
   }
   Mirror_UpdatePositionAndRotation(self, methodInfo);
   UpdateMirror(self->_noteTransform, self->_followedNoteTransform, self,
-               il2cpp_utils::cast<NoteControllerBase>(self->followedNote), [self](bool hide) { self->Hide(hide); });
+               i2c::cast<NoteControllerBase*>(self->followedNote), [self](bool hide) { self->Hide(hide); });
 }
 
 void InstallMirroredNoteControllerHooks() {
   INSTALL_HOOK(NELogger::Logger, MirroredNote_Mirror);
   INSTALL_HOOK(NELogger::Logger, MirroredGameNote_Mirror);
 
-  auto mInfo = il2cpp_utils::il2cpp_type_check::MetadataGetter<
-      &MirroredNoteController_1<Il2CppObject*>::UpdatePositionAndRotation>::get();
-  INSTALL_HOOK_DIRECT(NELogger::Logger, Mirror_UpdatePositionAndRotation, (void*)(mInfo->methodPointer));
+  auto mInfo = i2c::metadata_getter<
+      &MirroredNoteController_1<Il2CppObject*>::UpdatePositionAndRotation>::method_info();
+  INSTALL_HOOK(NELogger::Logger, Mirror_UpdatePositionAndRotation, (void*)(mInfo->methodPointer));
 }
 
 NEInstallHooks(InstallMirroredNoteControllerHooks);

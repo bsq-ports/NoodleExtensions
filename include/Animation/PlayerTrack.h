@@ -5,7 +5,10 @@
 #include "custom-types/shared/macros.hpp"
 #include "NELogger.h"
 
-#include "beatsaber-hook/shared/utils/typedefs-wrappers.hpp"
+#include "beatsaber-hook/shared/safeptr.hpp"
+#include "beatsaber-hook/shared/arrayw.hpp"
+#include "beatsaber-hook/shared/listw.hpp"
+#include "beatsaber-hook/shared/stringw.hpp"
 
 #include "GlobalNamespace/PauseController.hpp"
 #include "tracks/shared/Animation/GameObjectTrackController.hpp"
@@ -26,12 +29,12 @@ public:
   static PlayerTrack* Create(PlayerTrackObject object);
   static void AssignTrack(TrackW track, PlayerTrackObject object);
 
-  static std::unordered_map<PlayerTrackObject, SafePtrUnity<PlayerTrack>> const& GetPlayerTracks() {
+  static std::unordered_map<PlayerTrackObject, safe_ptr<PlayerTrack*, true>> const& GetPlayerTracks() {
     return playerTracks;
   }
 
 private:
-  static std::unordered_map<PlayerTrackObject, SafePtrUnity<PlayerTrack>> playerTracks;
+  static std::unordered_map<PlayerTrackObject, safe_ptr<PlayerTrack*, true>> playerTracks;
   PlayerTrackObject trackObject;
 
   Tracks::GameObjectTrackController* trackController;
@@ -41,7 +44,7 @@ private:
   NEVector::Quaternion startLocalRot;
   NEVector::Vector3 startScale;
   UnityEngine::Transform* origin;
-  SafePtrUnity<GlobalNamespace::PauseController> pauseController;
+  safe_ptr<GlobalNamespace::PauseController*> pauseController;
 
   void OnDidPauseEvent();
   void OnDidResumeEvent();

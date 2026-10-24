@@ -1,6 +1,10 @@
+#include "beatsaber-hook/shared/safeptr.hpp"
 #include "NELogger.h"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
 
 #include "System/Action_1.hpp"
 #include "System/Action_2.hpp"
@@ -40,8 +44,8 @@ using namespace GlobalNamespace;
 using namespace UnityEngine;
 using namespace TrackParenting;
 
-static SafePtr<System::Collections::Generic::List_1<UnityW<ObstacleController>>> activeObstacles;
-SafePtr<System::Collections::Generic::List_1<UnityW<ObstacleController>>>& getActiveObstacles() {
+static safe_ptr<System::Collections::Generic::List_1<UnityW<ObstacleController>>*> activeObstacles;
+safe_ptr<System::Collections::Generic::List_1<UnityW<ObstacleController>>*>& getActiveObstacles() {
   if (!activeObstacles) activeObstacles = System::Collections::Generic::List_1<UnityW<ObstacleController>>::New_ctor();
 
   return activeObstacles;
@@ -71,11 +75,11 @@ float obstacleTimeAdjust(ObstacleController* oc, float original, std::span<Track
 }
 
 MAKE_HOOK_MATCH(ObstacleController_Init, &ObstacleController::Init, void, ObstacleController* self,
-                ObstacleData* normalObstacleData, ByRef<GlobalNamespace::ObstacleSpawnData> obstacleSpawnData) {
+                ObstacleData* normalObstacleData, by_ref<GlobalNamespace::ObstacleSpawnData const> obstacleSpawnData) {
   if (!Hooks::isNoodleHookEnabled()) return ObstacleController_Init(self, normalObstacleData, obstacleSpawnData);
   ObstacleController_Init(self, normalObstacleData, obstacleSpawnData);
 
-  static auto CustomKlass = classof(CustomJSONData::CustomObstacleData*);
+  static auto CustomKlass = i2c::class_of<CustomJSONData::CustomObstacleData*>();
 
   if (normalObstacleData->klass != CustomKlass) return;
 
@@ -141,10 +145,6 @@ MAKE_HOOK_MATCH(ObstacleController_Init, &ObstacleController::Init, void, Obstac
     setBounds();
     return;
   }
-
-  static auto Quaternion_Inverse =
-      il2cpp_utils::il2cpp_type_check::FPtrWrapper<static_cast<UnityEngine::Quaternion (*)(UnityEngine::Quaternion)>(
-          &UnityEngine::Quaternion::Inverse)>::get();
 
   // transpiler GetWorldRotation
   {
@@ -248,7 +248,7 @@ static void ObstacleController_ManualUpdateTranspile(ObstacleController* self, f
 MAKE_HOOK_MATCH(ObstacleController_ManualUpdate, &ObstacleController::ManualUpdate, void, ObstacleController* self) {
   if (!Hooks::isNoodleHookEnabled()) return ObstacleController_ManualUpdate(self);
 
-  static auto CustomKlass = classof(CustomJSONData::CustomObstacleData*);
+  static auto CustomKlass = i2c::class_of<CustomJSONData::CustomObstacleData*>();
 
   if (self->_obstacleData->klass != CustomKlass) return ObstacleController_ManualUpdate(self);
 
@@ -421,7 +421,7 @@ MAKE_HOOK_MATCH(ObstacleController_GetPosForTime, &ObstacleController::GetPosFor
                 float time) {
   if (!Hooks::isNoodleHookEnabled()) return ObstacleController_GetPosForTime(self, time);
 
-  //    static auto CustomObstacleDataKlass = classof(CustomJSONData::CustomObstacleData *);
+  //    static auto CustomObstacleDataKlass = i2c::class_of<CustomJSONData::CustomObstacleData *>();
   //    CRASH_UNLESS(self);
   //    CRASH_UNLESS(self->_obstacleData);
   //    NELogger::Logger.debug("ObstacleController::GetPosForTime %p", self->_obstacleData);
@@ -433,7 +433,7 @@ MAKE_HOOK_MATCH(ObstacleController_GetPosForTime, &ObstacleController::GetPosFor
   //    }
   auto* obstacleData = reinterpret_cast<CustomJSONData::CustomObstacleData*>(self->_obstacleData);
 
-  static auto CustomKlass = classof(CustomJSONData::CustomObstacleData*);
+  static auto CustomKlass = i2c::class_of<CustomJSONData::CustomObstacleData*>();
 
   if (self->_obstacleData->klass != CustomKlass || !obstacleData->customData->value) {
     return ObstacleController_GetPosForTime(self, time);
@@ -472,7 +472,7 @@ MAKE_HOOK_MATCH(ObstacleController_GetObstacleLength, &ObstacleController::GetOb
                 ObstacleController* self) {
   if (!Hooks::isNoodleHookEnabled()) return ObstacleController_GetObstacleLength(self);
 
-  static auto CustomKlass = classof(CustomJSONData::CustomObstacleData*);
+  static auto CustomKlass = i2c::class_of<CustomJSONData::CustomObstacleData*>();
 
   if (self->_obstacleData->klass != CustomKlass) return ObstacleController_GetObstacleLength(self);
 
@@ -510,7 +510,7 @@ MAKE_HOOK_MATCH(ParametricBoxFakeGlowController_Refresh, &GlobalNamespace::Param
   ParametricBoxFakeGlowController_Refresh(self);
 }
 
-// #include "beatsaber-hook/shared/utils/instruction-parsing.hpp"
+// #include "beatsaber-hook/shared/binary.hpp"
 // MAKE_HOOK(Object_New, nullptr, Il2CppObject *, Il2CppClass *klass) {
 //     if (test && klass && klass->name && klass->namespaze) {
 //         NELogger::Logger.info("Allocating a {}.{}", klass->namespaze, klass->name);
@@ -531,11 +531,11 @@ void InstallObstacleControllerHooks() {
   // Uncomment to disable fake glow.
   // INSTALL_HOOK(NELogger::Logger, ParametricBoxFakeGlowController_OnEnable);
 
-  // Instruction on((const int32_t*) HookTracker::GetOrig(il2cpp_functions::object_new));
+  // Instruction on((const int32_t*) HookTracker::GetOrig(i2c::functions::object_new));
   // Instruction j2Ob_N_thunk(CRASH_UNLESS(on.findNthCall(1)->label));
   // logger.info("thunk addr %p %x", j2Ob_N_thunk.addr, *j2Ob_N_thunk.addr);
   // auto *j2Ob_N = CRASH_UNLESS(j2Ob_N_thunk.findNthDirectBranchWithoutLink(1));
-  // INSTALL_HOOK_DIRECT(logger, Object_New, (void*) *j2Ob_N->label);
+  // INSTALL_HOOK(logger, Object_New, (void*) *j2Ob_N->label);
 }
 
 NEInstallHooks(InstallObstacleControllerHooks);

@@ -1,6 +1,9 @@
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/il2cpp-utils-methods.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
 #include "GlobalNamespace/DisappearingArrowControllerBase_1.hpp"
 #include "GlobalNamespace/ObstacleController.hpp"
@@ -21,20 +24,20 @@ using namespace UnityEngine;
 using namespace Zenject;
 
 template <>
-struct ::il2cpp_utils::il2cpp_type_check::MetadataGetter<&Zenject::MemoryPoolBase_1<Il2CppObject*>::Despawn> {
-  static MethodInfo const* methodInfo() {
-    return il2cpp_utils::FindMethodUnsafe(classof(Zenject::MemoryPoolBase_1<Il2CppObject*>*), "Despawn", 1);
+struct ::i2c::metadata_getter<&Zenject::MemoryPoolBase_1<Il2CppObject*>::Despawn> {
+  static MethodInfo const* method_info() {
+    return i2c::find_method(i2c::class_of<Zenject::MemoryPoolBase_1<Il2CppObject*>*>(), {"Despawn", 1});
   }
 };
 
 // template<>
 // struct
-// ::il2cpp_utils::il2cpp_type_check::MetadataGetter<&System::Collections::Generic::Stack_1<ObstacleController*>::Push>
+// ::i2c::metadata_getter<&System::Collections::Generic::Stack_1<ObstacleController*>::Push>
 // {
 //     static const MethodInfo* get() {
 //         auto methodInfo =
-//         il2cpp_utils::FindMethod(classof(System::Collections::Generic::Stack_1<ObstacleController*>*), "Push",
-//         std::vector<Il2CppClass*>{}, il2cpp_utils::TypesFrom({classof(ObstacleController*)}));
+//         il2cpp_utils::FindMethod(i2c::class_of<System::Collections::Generic::Stack_1<ObstacleController*>*>(), "Push",
+//         std::vector<Il2CppClass*>{}, il2cpp_utils::TypesFrom({i2c::class_of<ObstacleController*>()}));
 //
 //     }
 // };
@@ -79,12 +82,12 @@ struct ::il2cpp_utils::il2cpp_type_check::MetadataGetter<&Zenject::MemoryPoolBas
 // }
 
 // I love generics and il2cpp
-MAKE_HOOK(MemoryPoolBase_Despawn, nullptr, void, MemoryPoolBase_1<Il2CppObject*>* self, Il2CppObject* item,
+MAKE_HOOK(MemoryPoolBase_Despawn, (nullptr), void, MemoryPoolBase_1<Il2CppObject*>* self, Il2CppObject* item,
           MethodInfo* methodInfo) {
-  static auto* ObstacleControllerKlass = classof(ObstacleController*);
+  static auto* ObstacleControllerKlass = i2c::class_of<ObstacleController*>();
 
   if (!item || (item->klass != ObstacleControllerKlass
-                //    /* && !il2cpp_functions::class_is_assignable_from(ObstacleControllerKlass, item->klass) */ //
+                //    /* && !i2c::functions::class_is_assignable_from(ObstacleControllerKlass, item->klass) */ //
                 //    TODO: Is this future proofing even needed?
                 )) {
     MemoryPoolBase_Despawn(self, item, methodInfo);
@@ -115,8 +118,8 @@ MAKE_HOOK(MemoryPoolBase_Despawn, nullptr, void, MemoryPoolBase_1<Il2CppObject*>
 
 void InstallMemoryPoolBaseHooks() {
   auto mInfo =
-      il2cpp_utils::il2cpp_type_check::MetadataGetter<&Zenject::MemoryPoolBase_1<Il2CppObject*>::Despawn>::methodInfo();
-  INSTALL_HOOK_DIRECT(NELogger::Logger, MemoryPoolBase_Despawn, (void*)(mInfo->methodPointer));
+      i2c::metadata_getter<&Zenject::MemoryPoolBase_1<Il2CppObject*>::Despawn>::method_info();
+  INSTALL_HOOK(NELogger::Logger, MemoryPoolBase_Despawn, (void*)(mInfo->methodPointer));
 }
 
 NEInstallHooks(InstallMemoryPoolBaseHooks);

@@ -1,3 +1,4 @@
+#include "beatsaber-hook/shared/safeptr.hpp"
 // https://github.com/Kautenja/object-pool/blob/master/include/object_pool.hpp
 
 #pragma once
@@ -11,7 +12,7 @@ namespace NoodleExtensions::Pool {
 
 class NoodleMovementDataProviderPool {
 private:
-  std::deque<SafePtr<NoodleMovementDataProvider>> free = {};
+  std::deque<safe_ptr<NoodleMovementDataProvider*>> free = {};
 
 public:
   NoodleMovementDataProviderPool(int count) : free() {
@@ -20,8 +21,8 @@ public:
     }
   }
 
-  SafePtr<NoodleMovementDataProvider> get(GlobalNamespace::BeatmapObjectData* beatmapObjectData) {
-    SafePtr<NoodleMovementDataProvider> obj;
+  safe_ptr<NoodleMovementDataProvider*> get(GlobalNamespace::BeatmapObjectData* beatmapObjectData) {
+    safe_ptr<NoodleMovementDataProvider*> obj;
     if (!free.empty()) {
       obj.emplace(free.back().ptr());
       free.pop_back();
@@ -34,7 +35,7 @@ public:
     return obj;
   }
 
-  void put(SafePtr<NoodleMovementDataProvider> obj) {
+  void put(safe_ptr<NoodleMovementDataProvider*> obj) {
     // reset variables here if needed
     // obj->InitObject(nullptr);
     free.emplace_back(obj);

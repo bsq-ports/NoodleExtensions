@@ -1,6 +1,9 @@
 #include "VariableMovementHelper.hpp"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
 #include "GlobalNamespace/NoteFloorMovement.hpp"
 #include "UnityEngine/Transform.hpp"
@@ -60,12 +63,8 @@ MAKE_HOOK_MATCH(NoteFloorMovement_SetToStart, &NoteFloorMovement::SetToStart, Un
 
   auto ret = NoteFloorMovement_SetToStart(self);
 
-  static auto Quaternion_Euler =
-      il2cpp_utils::il2cpp_type_check::FPtrWrapper<static_cast<UnityEngine::Quaternion (*)(UnityEngine::Vector3)>(
-          &UnityEngine::Quaternion::Euler)>::get();
-
   if (noteUpdateAD && noteUpdateAD->objectData.disableNoteLook) {
-    self->_rotatedObject->set_localRotation(Quaternion_Euler({ 0, 0, noteUpdateAD->endRotation }));
+    self->_rotatedObject->set_localRotation(NEVector::Quaternion::Euler(0.0f, 0.0f, noteUpdateAD->endRotation));
   }
 
   return ret;

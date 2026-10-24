@@ -1,6 +1,10 @@
 #include "AssociatedData.h"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "GlobalNamespace/BeatmapCharacteristicExtensions.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
 #include "GlobalNamespace/PlayerTransforms.hpp"
 #include "UnityEngine/Vector3.hpp"
@@ -47,7 +51,7 @@ MAKE_HOOK_MATCH(PlayerTransforms_HeadsetOffsetZ, &PlayerTransforms::Update, void
   }
 
   // Make sure to set _headWorldPos to prevent collissions with walls when player is moved.
-  if (UnityW<Transform> headTransform = self->_headTransform; headTransform.isAlive()) {
+  if (UnityW<Transform> headTransform = self->_headTransform; headTransform) {
     self->_headWorldPos = headTransform->position;
     self->_headWorldRot = headTransform->rotation;
   }
@@ -89,7 +93,7 @@ MAKE_HOOK_MATCH(PlayerTransforms_HeadsetOffsetZ, &PlayerTransforms::Update, void
     }
   }
 
-  if (self->_beatmapKey.hasValue && self->_beatmapKey.Value.beatmapCharacteristic->containsRotationEvents) {
+  if (self->_beatmapKey.hasValue && BeatmapCharacteristicExtensions::ContainsRotationEvents(self->_beatmapKey.Value.characteristic)) {
     return;
   }
 

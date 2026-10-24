@@ -1,5 +1,8 @@
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
 #include "GlobalNamespace/NoteData.hpp"
 
@@ -12,7 +15,7 @@ using namespace GlobalNamespace;
 
 // MAKE_HOOK_MATCH(NoteData_Mirror, &NoteData::Mirror,
 //                 void, NoteData *self, int lineCount) {
-//     static auto CustomNoteDataKlass = classof(CustomJSONData::CustomNoteData*);
+//     static auto CustomNoteDataKlass = i2c::class_of<CustomJSONData::CustomNoteData*>();
 //     if (self->klass != CustomNoteDataKlass)
 //     {
 //         return NoteData_Mirror(self, lineCount);

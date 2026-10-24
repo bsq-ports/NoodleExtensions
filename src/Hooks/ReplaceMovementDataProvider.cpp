@@ -1,7 +1,10 @@
 #include "Animation/NoodleMovementDataProvider.hpp"
 #include "NECaches.h"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
 
 #include "GlobalNamespace/ObstacleController.hpp"
 #include "GlobalNamespace/ObstacleData.hpp"
@@ -31,7 +34,7 @@ using namespace GlobalNamespace;
 
 MAKE_HOOK_MATCH(ReplaceObstacleMovement, &ObstacleController::Init, void,
                 ObstacleController* self, ObstacleData* obstacleData,
-                ByRef<ObstacleSpawnData> obstacleSpawnData) {
+                by_ref<ObstacleSpawnData const> obstacleSpawnData) {
   if (!Hooks::isNoodleHookEnabled())
     return ReplaceObstacleMovement(self, obstacleData, obstacleSpawnData);
 
@@ -45,7 +48,7 @@ MAKE_HOOK_MATCH(ReplaceObstacleMovement, &ObstacleController::Init, void,
 
 MAKE_HOOK_MATCH(ReplaceNoteMovement, &NoteController::Init, void,
                 NoteController* self, NoteData* noteData,
-                ByRef<NoteSpawnData> noteSpawnData, float endRotation,
+                by_ref<NoteSpawnData const> noteSpawnData, float endRotation,
                 float noteUniformScale, bool rotateTowardsPlayer, bool useRandomRotation) {
   if (!Hooks::isNoodleHookEnabled())
     return ReplaceNoteMovement(self, noteData, noteSpawnData, endRotation, noteUniformScale, rotateTowardsPlayer, useRandomRotation);
@@ -59,12 +62,11 @@ MAKE_HOOK_MATCH(ReplaceNoteMovement, &NoteController::Init, void,
   auto noteJump = noteMovement->_jump;
   auto noteWaiting = noteMovement->_waiting;
 
-  noteMovement->_variableMovementDataProvider = IProvider;
   noteFloorMovement->_variableMovementDataProvider = IProvider;
   noteJump->_variableMovementDataProvider = IProvider;
   noteWaiting->_variableMovementDataProvider = IProvider;
 
-  if (il2cpp_utils::AssignableFrom<BurstSliderGameNoteController*>(self->klass))
+  if (i2c::functions::class_is_assignable_from(i2c::class_of<BurstSliderGameNoteController*>(), self->klass))
   {
     auto burstSliderGameNoteController = reinterpret_cast<BurstSliderGameNoteController*>(self);
     burstSliderGameNoteController->_variableMovementDataProvider = reinterpret_cast<IVariableMovementDataProvider*>(provider.ptr());
@@ -75,7 +77,7 @@ MAKE_HOOK_MATCH(ReplaceNoteMovement, &NoteController::Init, void,
 
 MAKE_HOOK_MATCH(ReplaceSliderMovement, &SliderController::Init, void,
                 SliderController* self, SliderController::LengthType lengthType,
-                SliderData* sliderData, ByRef<SliderSpawnData> sliderSpawnData,
+                SliderData* sliderData, by_ref<SliderSpawnData const> sliderSpawnData,
                 float noteUniformScale, float randomValue) {
   if (!Hooks::isNoodleHookEnabled())
     return ReplaceSliderMovement(self, lengthType, sliderData, sliderSpawnData, noteUniformScale, randomValue);
@@ -95,7 +97,7 @@ MAKE_HOOK_MATCH(DespawnObstacleMovement,
   if (!Hooks::isNoodleHookEnabled())
     return DespawnObstacleMovement(self, obstacleController);
 
-  if (self->_variableMovementDataProvider->klass == classof(NoodleExtensions::NoodleMovementDataProvider*)) {
+  if (self->_variableMovementDataProvider->klass == i2c::class_of<NoodleExtensions::NoodleMovementDataProvider*>()) {
     NECaches::noodleMovementDataProviderPool->put(reinterpret_cast<NoodleExtensions::NoodleMovementDataProvider*>(self->_variableMovementDataProvider));
   }
 
@@ -108,7 +110,7 @@ MAKE_HOOK_MATCH(DespawnNoteMovement,
   if (!Hooks::isNoodleHookEnabled())
     return DespawnNoteMovement(self, noteController);
 
-  if (self->_variableMovementDataProvider->klass == classof(NoodleExtensions::NoodleMovementDataProvider*)) {
+  if (self->_variableMovementDataProvider->klass == i2c::class_of<NoodleExtensions::NoodleMovementDataProvider*>()) {
     NECaches::noodleMovementDataProviderPool->put(reinterpret_cast<NoodleExtensions::NoodleMovementDataProvider*>(self->_variableMovementDataProvider));
   }
 
@@ -123,7 +125,7 @@ MAKE_HOOK_MATCH(DespawnSliderMovement,
   if (!Hooks::isNoodleHookEnabled())
     return DespawnSliderMovement(self, sliderController);
 
-  if (self->_variableMovementDataProvider->klass == classof(NoodleExtensions::NoodleMovementDataProvider*)) {
+  if (self->_variableMovementDataProvider->klass == i2c::class_of<NoodleExtensions::NoodleMovementDataProvider*>()) {
     NECaches::noodleMovementDataProviderPool->put(reinterpret_cast<NoodleExtensions::NoodleMovementDataProvider*>(self->_variableMovementDataProvider));
   }
 

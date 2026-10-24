@@ -1,3 +1,4 @@
+#include "beatsaber-hook/shared/safeptr.hpp"
 #include "Animation/PlayerTrack.h"
 #include "Animation/AnimationHelper.h"
 #include "AssociatedData.h"
@@ -29,7 +30,7 @@ using namespace Animation;
 // Events.cpp
 extern BeatmapObjectSpawnController* spawnController;
 
-std::unordered_map<PlayerTrackObject, SafePtrUnity<PlayerTrack>> PlayerTrack::playerTracks;
+std::unordered_map<PlayerTrackObject, safe_ptr<PlayerTrack*, true>> PlayerTrack::playerTracks;
 
 static Action* didPauseEventAction;
 static Action* didResumeEventAction;
@@ -45,14 +46,14 @@ void PlayerTrack::ctor() {
 }
 
 PlayerTrack* PlayerTrack::Create(PlayerTrackObject object) {
-  auto playerTransforms = Resources::FindObjectsOfTypeAll<PlayerTransforms*>()->FirstOrDefault();
+  auto playerTransforms = Resources::FindObjectsOfTypeAll<PlayerTransforms*>().front_or_default();
   if (!playerTransforms) {
     CJDLogger::Logger.fmtLog<Paper::LogLevel::ERR>("PlayerTransforms not found");
     return nullptr;
   }
 
   UnityEngine::Transform* target;
-  auto playerVRControllersManager = Resources::FindObjectsOfTypeAll<PlayerVRControllersManager*>()->FirstOrDefault();
+  auto playerVRControllersManager = Resources::FindObjectsOfTypeAll<PlayerVRControllersManager*>().front_or_default();
   switch (object) {
   case PlayerTrackObject::Head:
     target = playerTransforms->_headTransform;

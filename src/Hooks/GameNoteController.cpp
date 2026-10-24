@@ -1,8 +1,14 @@
 #include "NELogger.h"
 #include "VariableMovementHelper.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/typedefs-wrappers.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/safeptr.hpp"
+#include "beatsaber-hook/shared/arrayw.hpp"
+#include "beatsaber-hook/shared/listw.hpp"
+#include "beatsaber-hook/shared/stringw.hpp"
 
 #include "GlobalNamespace/Saber.hpp"
 #include "GlobalNamespace/SaberType.hpp"
@@ -26,9 +32,9 @@ MAKE_HOOK_MATCH(GameNoteController_HandleCut, &GameNoteController::HandleCut, vo
                 Vector3 cutDirVec, bool allowBadCut) {
   if (!Hooks::isNoodleHookEnabled()) return GameNoteController_HandleCut(self, saber, cutPoint, orientation, cutDirVec, allowBadCut);
 
-  auto customNoteData = il2cpp_utils::try_cast<CustomJSONData::CustomNoteData>(self->_noteData);
-  if (customNoteData && customNoteData.value()->customData->value) {
-    BeatmapObjectAssociatedData& ad = getAD(customNoteData.value()->customData);
+  auto customNoteData = i2c::try_cast<CustomJSONData::CustomNoteData*>(self->_noteData);
+  if (customNoteData && customNoteData->customData->value) {
+    BeatmapObjectAssociatedData& ad = getAD(customNoteData->customData);
     
     bool disableBadCutDirection = ad.objectData.disableBadCutDirection;
     bool disableBadCutSaberType = ad.objectData.disableBadCutSaberType;

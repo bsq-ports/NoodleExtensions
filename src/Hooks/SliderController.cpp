@@ -1,8 +1,14 @@
 #include "NELogger.h"
 #include "VariableMovementHelper.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/typedefs-wrappers.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/safeptr.hpp"
+#include "beatsaber-hook/shared/arrayw.hpp"
+#include "beatsaber-hook/shared/listw.hpp"
+#include "beatsaber-hook/shared/stringw.hpp"
 
 #include "GlobalNamespace/SliderController.hpp"
 #include "GlobalNamespace/SliderMovement.hpp"
@@ -40,8 +46,8 @@ MAKE_HOOK_MATCH(SliderController_IsNoteStartOfThisSlider, &SliderController::IsN
       return false;
   }
 
-  static auto CustomSliderKlass = classof(CustomJSONData::CustomSliderData*);
-  static auto CustomNoteKlass = classof(CustomJSONData::CustomNoteData*);
+  static auto CustomSliderKlass = i2c::class_of<CustomJSONData::CustomSliderData*>();
+  static auto CustomNoteKlass = i2c::class_of<CustomJSONData::CustomNoteData*>();
   if (self->_sliderData->klass != CustomSliderKlass ||
       noteData->klass != CustomNoteKlass) {
     return SliderController_IsNoteStartOfThisSlider(self, noteData);
@@ -72,14 +78,14 @@ MAKE_HOOK_MATCH(SliderController_IsNoteStartOfThisSlider, &SliderController::IsN
 }
 
 MAKE_HOOK_MATCH(SliderController_Init, &SliderController::Init, void, SliderController* self,
-                SliderController::LengthType lengthType, SliderData* sliderData, ByRef<SliderSpawnData> sliderSpawnData,
+                SliderController::LengthType lengthType, SliderData* sliderData, by_ref<SliderSpawnData const> sliderSpawnData,
                 float noteUniformScale, float randomValue) {
 
   SliderController_Init(self, lengthType, sliderData, sliderSpawnData, noteUniformScale, randomValue);
 
   if (!Hooks::isNoodleHookEnabled()) return;
 
-  static auto CustomKlass = classof(CustomJSONData::CustomSliderData*);
+  static auto CustomKlass = i2c::class_of<CustomJSONData::CustomSliderData*>();
 
   if (sliderData->klass != CustomKlass) return;
 
@@ -129,7 +135,7 @@ MAKE_HOOK_MATCH(SliderMovement_ManualUpdate, &SliderMovement::ManualUpdate, void
 
   if (!Hooks::isNoodleHookEnabled()) return SliderMovement_ManualUpdate(self);
 
-  static auto CustomKlass = classof(CustomJSONData::CustomSliderData*);
+  static auto CustomKlass = i2c::class_of<CustomJSONData::CustomSliderData*>();
   if (self->_sliderData->klass != CustomKlass) return SliderMovement_ManualUpdate(self);
 
   auto* customSliderData = reinterpret_cast<CustomJSONData::CustomSliderData*>(self->_sliderData);

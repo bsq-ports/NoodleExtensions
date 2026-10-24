@@ -28,7 +28,7 @@ template <typename ToCast, typename It> inline std::vector<ToCast> of_type(It be
   result.reserve(std::distance(begin, end));
 
   for (auto it = begin; it != end; it++) {
-    if (il2cpp_utils::AssignableFrom<ToCast>((*it)->klass)) result.emplace_back(static_cast<ToCast>(*it));
+    if (i2c::functions::class_is_assignable_from(i2c::class_of<ToCast>(), (*it)->klass)) result.emplace_back(static_cast<ToCast>(*it));
   }
 
   result.shrink_to_fit();

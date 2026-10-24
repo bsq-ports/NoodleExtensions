@@ -21,29 +21,29 @@ using namespace GlobalNamespace;
  * @return true if the note is fake, false if the note is not fake.
  */
 bool FakeNoteHelper::GetFakeNote(NoteData* noteData) {
-  auto customNoteData = il2cpp_utils::try_cast<CustomJSONData::CustomNoteData>(noteData);
-  if (!customNoteData || !customNoteData.value()->customData) {
+  auto customNoteData = i2c::try_cast<CustomJSONData::CustomNoteData*>(noteData);
+  if (!customNoteData || !customNoteData->customData) {
     return false;
   }
-  BeatmapObjectAssociatedData& ad = getAD(customNoteData.value()->customData);
+  BeatmapObjectAssociatedData& ad = getAD(customNoteData->customData);
   return ad.objectData.fake.value_or(false);
 }
 
 bool FakeNoteHelper::GetCuttable(NoteData* noteData) {
-  auto customNoteData = il2cpp_utils::try_cast<CustomJSONData::CustomNoteData>(noteData);
-  if (!customNoteData || !customNoteData.value()->customData) {
+  auto customNoteData = i2c::try_cast<CustomJSONData::CustomNoteData*>(noteData);
+  if (!customNoteData || !customNoteData->customData) {
     return true;
   }
-  BeatmapObjectAssociatedData& ad = getAD(customNoteData.value()->customData);
+  BeatmapObjectAssociatedData& ad = getAD(customNoteData->customData);
   return !ad.objectData.uninteractable.value_or(false);
 }
 
 bool FakeNoteHelper::GetAttractableArc(SliderData* arcData) {
-  auto customArcData = il2cpp_utils::try_cast<CustomJSONData::CustomSliderData>(arcData);
-  if (!customArcData || !customArcData.value()->customData) {
+  auto customArcData = i2c::try_cast<CustomJSONData::CustomSliderData*>(arcData);
+  if (!customArcData || !customArcData->customData) {
     return true;
   }
-  BeatmapObjectAssociatedData& ad = getAD(customArcData.value()->customData);
+  BeatmapObjectAssociatedData& ad = getAD(customArcData->customData);
   return !ad.objectData.uninteractable.value_or(false);
 }
 
@@ -53,7 +53,7 @@ FakeNoteHelper::ObstacleFakeCheck(VList<GlobalNamespace::ObstacleController*> in
 
   for (auto const& obstacle : intersectingObstacles) {
     if (!obstacle || !obstacle->_obstacleData ||
-        il2cpp_utils::AssignableFrom<CustomJSONData::CustomObstacleData*>(obstacle->_obstacleData->klass))
+        i2c::functions::class_is_assignable_from(i2c::class_of<CustomJSONData::CustomObstacleData*>(), obstacle->_obstacleData->klass))
       continue;
 
     auto customData = reinterpret_cast<CustomJSONData::CustomObstacleData*>(obstacle->_obstacleData)->customData;

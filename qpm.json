@@ -47,7 +47,7 @@
         "pwsh ./scripts/pull-tombstone.ps1"
       ]
     },
-    "ndk": "^27.3.13750724",
+    "ndk": "^29.0.14206865",
     "qmodIncludeDirs": [
       "./build",
       "./extern/libs"
@@ -58,51 +58,51 @@
   "dependencies": [
     {
       "id": "beatsaber-hook",
-      "versionRange": "^6.4.2",
+      "versionRange": "^9.3.0",
       "additionalData": {}
     },
     {
       "id": "bs-cordl",
-      "versionRange": "4008.*",
+      "versionRange": "4503.*",
       "additionalData": {}
     },
     {
       "id": "custom-types",
-      "versionRange": "^0.18.4",
+      "versionRange": "^0.21.2",
       "additionalData": {
         "includeQmod": true
       }
     },
     {
       "id": "custom-json-data",
-      "versionRange": "^0.24.5",
+      "versionRange": "^0.24.6",
       "additionalData": {}
     },
     {
       "id": "config-utils",
-      "versionRange": "2.0.3",
+      "versionRange": "^3.0.0",
       "additionalData": {}
     },
     {
       "id": "tracks",
-      "versionRange": "^2.5.3",
+      "versionRange": "^2.5.5",
       "additionalData": {}
     },
     {
       "id": "songcore",
-      "versionRange": "^1.1.0",
+      "versionRange": "^1.3.5",
       "additionalData": {
         "includeQmod": true
       }
     },
     {
       "id": "sombrero",
-      "versionRange": "^0.1.43",
+      "versionRange": "^0.2.0",
       "additionalData": {}
     },
     {
       "id": "scotland2",
-      "versionRange": "^0.1.6",
+      "versionRange": "^0.1.7",
       "additionalData": {
         "includeQmod": false
       }
@@ -114,7 +114,7 @@
     },
     {
       "id": "paper2_scotland2",
-      "versionRange": "^4.6.4",
+      "versionRange": "^4.8.0",
       "additionalData": {}
     },
     {
@@ -124,8 +124,22 @@
     },
     {
       "id": "bsml",
-      "versionRange": "^0.4.54",
+      "versionRange": "^0.6.5",
       "additionalData": {}
+    },
+    {
+      "id": "flamingo",
+      "versionRange": "^1.2.1",
+      "additionalData": {
+        "private": true
+      }
+    },
+    {
+      "id": "reflectcpp",
+      "versionRange": "^0.25.0",
+      "additionalData": {
+        "private": true
+      }
     }
   ]
 }

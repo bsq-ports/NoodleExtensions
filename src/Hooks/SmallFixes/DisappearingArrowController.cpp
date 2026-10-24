@@ -1,5 +1,8 @@
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
 #include "GlobalNamespace/DisappearingArrowControllerBase_1.hpp"
 #include "GlobalNamespace/GameNoteController.hpp"
@@ -11,16 +14,16 @@ using namespace GlobalNamespace;
 using namespace UnityEngine;
 
 template <>
-struct ::il2cpp_utils::il2cpp_type_check::MetadataGetter<
+struct ::i2c::metadata_getter<
     &DisappearingArrowControllerBase_1<GameNoteController*>::SetArrowTransparency> {
 
   // make the compiler happy
   constexpr static std::size_t size = 0xc4;
   constexpr static std::size_t addrs = 0x26b6608;
 
-  static MethodInfo const* methodInfo() {
-    return il2cpp_utils::FindMethodUnsafe(
-        classof(GlobalNamespace::DisappearingArrowControllerBase_1<GameNoteController*>*), "SetArrowTransparency", 1);
+  static MethodInfo const* method_info() {
+    return i2c::find_method(
+        i2c::class_of<GlobalNamespace::DisappearingArrowControllerBase_1<GameNoteController*>*>(), {"SetArrowTransparency", 1});
   }
 };
 

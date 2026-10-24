@@ -1,4 +1,4 @@
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 #include "custom-json-data/shared/CustomBeatmapData.h"
 
 #include "GlobalNamespace/BeatmapObjectsInTimeRowProcessor.hpp"

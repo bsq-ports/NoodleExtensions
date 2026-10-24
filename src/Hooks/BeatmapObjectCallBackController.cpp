@@ -1,5 +1,8 @@
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
 #include "GlobalNamespace/BeatmapObjectSpawnController.hpp"
 #include "GlobalNamespace/BeatmapCallbacksController.hpp"
@@ -42,9 +45,9 @@ static float GetSpawnAheadTime(BeatmapObjectSpawnController::InitData* initData,
 }
 
 inline float ObjectSortGetTime(BeatmapDataItem* n) {
-  static auto* customObstacleDataClass = classof(CustomJSONData::CustomObstacleData*);
-  static auto* customNoteDataClass = classof(CustomJSONData::CustomNoteData*);
-  static auto* customSliderDataClass = classof(CustomJSONData::CustomSliderData*);
+  static auto* customObstacleDataClass = i2c::class_of<CustomJSONData::CustomObstacleData*>();
+  static auto* customNoteDataClass = i2c::class_of<CustomJSONData::CustomNoteData*>();
+  static auto* customSliderDataClass = i2c::class_of<CustomJSONData::CustomSliderData*>();
 
   float* aheadTime;
   CustomJSONData::JSONWrapper* customDataWrapper;
@@ -92,7 +95,7 @@ SortAndOrderList(CustomJSONData::CustomBeatmapData* beatmapData) {
   initData = nullptr;
   movementData = nullptr;
 
-  auto newList = SafePtr(System::Collections::Generic::LinkedList_1<BeatmapDataItem*>::New_ctor());
+  auto newList = safe_ptr(System::Collections::Generic::LinkedList_1<BeatmapDataItem*>::New_ctor());
   auto newListPtr = static_cast<System::Collections::Generic::LinkedList_1<BeatmapDataItem*>*>(newList);
   if (items.empty()) return newListPtr;
 
@@ -119,14 +122,14 @@ MAKE_HOOK_MATCH(BeatmapCallbacksUpdater_LateUpdate, &BeatmapCallbacksUpdater::La
     return BeatmapCallbacksUpdater_LateUpdate(self);
   }
 
-  auto beatmapOpt = il2cpp_utils::try_cast<CustomJSONData::CustomBeatmapData>(selfController->_beatmapData);
+  auto beatmapOpt = i2c::try_cast<CustomJSONData::CustomBeatmapData*>(selfController->_beatmapData);
   if (beatmapOpt && controller != selfController || selfController->_beatmapData != beatmapData) {
 
     CJDLogger::Logger.fmtLog<Paper::LogLevel::INF>("Using noodle sorted node");
     controller = selfController;
     beatmapData = selfController->_beatmapData;
 
-    auto items = SortAndOrderList(beatmapOpt.value());
+    auto items = SortAndOrderList(beatmapOpt);
 
     auto first = items->get_First();
     CustomJSONData::CustomEventCallbacks::firstNode.emplace(first);

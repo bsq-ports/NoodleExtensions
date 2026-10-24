@@ -1,7 +1,7 @@
 #pragma once
 #include "config-utils/shared/config-utils.hpp"
 
-#include "beatsaber-hook/shared/utils/typedefs-string.hpp"
+#include "beatsaber-hook/shared/stringw.hpp"
 
 enum struct MaterialBehaviour { SMART_COLOR = 0, SEMI_BASIC = 1, BASIC = 2 };
 

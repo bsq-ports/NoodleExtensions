@@ -1,5 +1,8 @@
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
 #include "GlobalNamespace/BaseNoteVisuals.hpp"
 #include "GlobalNamespace/NoteController.hpp"
@@ -23,18 +26,18 @@ MAKE_HOOK_MATCH(BaseNoteVisuals_Awake, &BaseNoteVisuals::Awake, void, BaseNoteVi
 
   BaseNoteVisuals_Awake(self);
 
-  static auto ICubeNoteTypeProviderKlass = classof(GameNoteController*); // classof(INoteMovementProvider*);
-  static auto CustomNoteDataKlass = classof(CustomJSONData::CustomNoteData*);
+  static auto ICubeNoteTypeProviderKlass = i2c::class_of<GameNoteController*>(); // i2c::class_of<INoteMovementProvider*>();
+  static auto CustomNoteDataKlass = i2c::class_of<CustomJSONData::CustomNoteData*>();
 
   if (self && self->_noteController &&
-      il2cpp_functions::class_is_assignable_from(ICubeNoteTypeProviderKlass, self->_noteController->klass)) {
+      i2c::functions::class_is_assignable_from(ICubeNoteTypeProviderKlass, self->_noteController->klass)) {
     NoteController* noteController = static_cast<NoteController*>(self->_noteController.ptr());
 
     if (!noteController->_noteData) return;
 
     DisappearingArrowControllerBase_1<GameNoteController*>* disappearingArrowController;
 
-    if (il2cpp_functions::class_is_assignable_from(CustomNoteDataKlass, noteController->_noteData->klass)) {
+    if (i2c::functions::class_is_assignable_from(CustomNoteDataKlass, noteController->_noteData->klass)) {
       //        if (noteData->customData) {
       auto& ad = NECaches::getNoteCache(noteController);
 

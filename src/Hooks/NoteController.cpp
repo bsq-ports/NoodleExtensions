@@ -1,8 +1,14 @@
 #include "NELogger.h"
 #include "VariableMovementHelper.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/typedefs-wrappers.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/safeptr.hpp"
+#include "beatsaber-hook/shared/arrayw.hpp"
+#include "beatsaber-hook/shared/listw.hpp"
+#include "beatsaber-hook/shared/stringw.hpp"
 
 #include "GlobalNamespace/NoteController.hpp"
 #include "GlobalNamespace/MirroredGameNoteController.hpp"
@@ -110,14 +116,14 @@ void NECaches::ClearNoteCaches() {
 }
 
 MAKE_HOOK_MATCH(NoteController_Init, &NoteController::Init, void, NoteController* self,
-                GlobalNamespace::NoteData* noteData, ByRef<GlobalNamespace::NoteSpawnData> noteSpawnData,
+                GlobalNamespace::NoteData* noteData, by_ref<GlobalNamespace::NoteSpawnData const> noteSpawnData,
                 float_t endRotation, float_t uniformScale, bool rotateTowardsPlayer, bool useRandomRotation) {
 
   NoteController_Init(self, noteData, noteSpawnData, endRotation, uniformScale, rotateTowardsPlayer, useRandomRotation);
 
   if (!Hooks::isNoodleHookEnabled()) return;
 
-  static auto CustomKlass = classof(CustomJSONData::CustomNoteData*);
+  static auto CustomKlass = i2c::class_of<CustomJSONData::CustomNoteData*>();
 
   if (noteData->klass != CustomKlass) return;
 
@@ -194,7 +200,7 @@ MAKE_HOOK_MATCH(NoteController_Init, &NoteController::Init, void, NoteController
   Vector3 moveStartPos = noteSpawnData->moveStartOffset;
   Vector3 moveEndPos = noteSpawnData->moveEndOffset;
   Vector3 jumpEndPos = noteSpawnData->jumpEndOffset;
-  auto movement = VariableMovementW(self->_noteMovement->_variableMovementDataProvider);
+  auto movement = VariableMovementW(self->_noteMovement->_jump->_variableMovementDataProvider);
   float jumpGravity = movement.CalculateCurrentNoteJumpGravity(noteSpawnData->gravityBase);
   float halfJumpDuration = movement.halfJumpDuration;
 
@@ -225,7 +231,7 @@ MAKE_HOOK_MATCH(NoteController_ManualUpdate, &NoteController::ManualUpdate, void
   noteUpdateAD = nullptr;
   noteTracks.clear();
 
-  static auto CustomKlass = classof(CustomJSONData::CustomNoteData*);
+  static auto CustomKlass = i2c::class_of<CustomJSONData::CustomNoteData*>();
 
   if (self->_noteData->klass != CustomKlass) return NoteController_ManualUpdate(self);
 
@@ -253,7 +259,7 @@ MAKE_HOOK_MATCH(NoteController_ManualUpdate, &NoteController::ManualUpdate, void
 
   NoteJump* noteJump = self->_noteMovement->_jump;
   NoteFloorMovement* floorMovement = self->_noteMovement->_floorMovement;
-  VariableMovementW variableMovementDataProvider = self->_noteMovement->_variableMovementDataProvider;
+  VariableMovementW variableMovementDataProvider = self->_noteMovement->_jump->_variableMovementDataProvider;
 
   auto time = NoodleExtensions::getTimeProp(noteTracks);
   float normalTime;
@@ -334,10 +340,10 @@ MAKE_HOOK_MATCH(NoteController_ManualUpdate, &NoteController::ManualUpdate, void
     }
   }
 
-  static auto* gameNoteControllerClass = classof(GameNoteController*);
-  static auto* bombNoteControllerClass = classof(BombNoteController*);
+  static auto* gameNoteControllerClass = i2c::class_of<GameNoteController*>();
+  static auto* bombNoteControllerClass = i2c::class_of<BombNoteController*>();
 
-  if (il2cpp_functions::class_is_assignable_from(gameNoteControllerClass, self->klass)) {
+  if (i2c::functions::class_is_assignable_from(gameNoteControllerClass, self->klass)) {
     if (offset.dissolveArrow.has_value() && self->_noteData->colorType != ColorType::None) {
       auto disappearingArrowController = NECaches::GetDisappearingArrowController((GameNoteController*)self, noteCache);
       if (noteDissolveConfig) {
@@ -348,8 +354,8 @@ MAKE_HOOK_MATCH(NoteController_ManualUpdate, &NoteController::ManualUpdate, void
     }
   }
 
-  if (il2cpp_functions::class_is_assignable_from(gameNoteControllerClass, self->klass) ||
-      il2cpp_functions::class_is_assignable_from(bombNoteControllerClass, self->klass)) {
+  if (i2c::functions::class_is_assignable_from(gameNoteControllerClass, self->klass) ||
+      i2c::functions::class_is_assignable_from(bombNoteControllerClass, self->klass)) {
     if (offset.cuttable.has_value()) {
       bool enabled = *offset.cuttable >= 1;
 
@@ -387,13 +393,13 @@ MAKE_HOOK_MATCH(NoteController_ManualUpdate, &NoteController::ManualUpdate, void
 }
 
 MAKE_HOOK_MATCH(NoteController_SendNoteWasCutEvent_LinkedNotes, &NoteController::SendNoteWasCutEvent, void,
-                NoteController* self, ByRef<::GlobalNamespace::NoteCutInfo> noteCutInfo) {
+                NoteController* self, by_ref<::GlobalNamespace::NoteCutInfo const> noteCutInfo) {
 
   NoteController_SendNoteWasCutEvent_LinkedNotes(self, noteCutInfo);
 
   if (!Hooks::isNoodleHookEnabled()) return;
 
-  auto* customNoteData = il2cpp_utils::try_cast<CustomJSONData::CustomNoteData>(self->_noteData).value_or(nullptr);
+  auto* customNoteData = i2c::try_cast<CustomJSONData::CustomNoteData*>(self->_noteData);
   if (!customNoteData || !customNoteData->customData) {
     return;
   }
@@ -427,7 +433,7 @@ MAKE_HOOK_MATCH(NoteController_SendNoteWasCutEvent_LinkedNotes, &NoteController:
   list.clear();
 
   for (auto& [noteController, cutInfo] : cuts) {
-    auto ref = ByRef<NoteCutInfo>(cutInfo);
+    auto ref = by_ref<NoteCutInfo const>(cutInfo);
     noteController->SendNoteWasCutEvent(ref);
   }
 }
@@ -449,8 +455,8 @@ MAKE_HOOK_MATCH(BeatmapObjectManager_Despawn_LinkedNotes,
 
 MAKE_HOOK_MATCH(BurstSliderGameNoteController_ManualUpdate, &BurstSliderGameNoteController::ManualUpdate, void, BurstSliderGameNoteController* self) {
   // TRANSPILE
-  static auto const* ManualUpdate = il2cpp_utils::il2cpp_type_check::MetadataGetter<&NoteController::ManualUpdate>::methodInfo();
-  il2cpp_utils::RunMethodRethrow<void, false>(self, ManualUpdate);
+  static auto const* ManualUpdate = i2c::metadata_getter<&NoteController::ManualUpdate>::method_info();
+  i2c::run_method<void>(self, ManualUpdate);
   self->SetBigCuttableColliderSize();
 }
 

@@ -1,5 +1,8 @@
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
 #include "GlobalNamespace/GameNoteController.hpp"
 #include "GlobalNamespace/BadNoteCutEffectSpawner.hpp"
@@ -13,7 +16,7 @@ using namespace GlobalNamespace;
 
 MAKE_HOOK_MATCH(BadNoteCutEffectSpawner_HandleNoteWasCut, &BadNoteCutEffectSpawner::HandleNoteWasCut, void,
                 BadNoteCutEffectSpawner* self, GlobalNamespace::NoteController* noteController,
-                ByRef<GlobalNamespace::NoteCutInfo> noteCutInfo) {
+                by_ref<GlobalNamespace::NoteCutInfo const> noteCutInfo) {
   if (!Hooks::isNoodleHookEnabled()) return BadNoteCutEffectSpawner_HandleNoteWasCut(self, noteController, noteCutInfo);
 
   if (!FakeNoteHelper::GetFakeNote(noteController->_noteData)) {
@@ -23,7 +26,7 @@ MAKE_HOOK_MATCH(BadNoteCutEffectSpawner_HandleNoteWasCut, &BadNoteCutEffectSpawn
 
 MAKE_HOOK_MATCH(BombCutSoundEffectManager_HandleNoteWasCut, &BombCutSoundEffectManager::HandleNoteWasCut, void,
                 BombCutSoundEffectManager* self, GlobalNamespace::NoteController* noteController,
-                ByRef<GlobalNamespace::NoteCutInfo> noteCutInfo) {
+                by_ref<GlobalNamespace::NoteCutInfo const> noteCutInfo) {
   if (!Hooks::isNoodleHookEnabled()) return BombCutSoundEffectManager_HandleNoteWasCut(self, noteController, noteCutInfo);
 
   if (!FakeNoteHelper::GetFakeNote(noteController->_noteData)) {

@@ -1,6 +1,9 @@
-#include "beatsaber-hook/shared/utils/hooking.hpp"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/typedefs-array.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/arrayw.hpp"
 
 #include "GlobalNamespace/BeatmapObjectSpawnController.hpp"
 #include "GlobalNamespace/BeatmapObjectManager.hpp"
@@ -34,11 +37,11 @@ using namespace UnityEngine::SceneManagement;
 //        "SaberBurnMarksParticles"
 //    };
 //
-//    Il2CppString *il2cppStringBig = il2cpp_utils::newcsstr("Big");
+//    Il2CppString *il2cppStringBig = StringW("Big");
 //
 //    for (std::string objectName : ObjectsToKill) {
 //        auto gameObjects = Object::FindObjectsOfType<GameObject*>();
-//        Il2CppString* il2cppObjectName = il2cpp_utils::newcsstr(objectName);
+//        Il2CppString* il2cppObjectName = StringW(objectName);
 //        if (objectName == "TrackLaneRing" || objectName == "BigTrackLaneRing") {
 //            for (int i = 0; i < gameObjects->Length(); i++) {
 //                auto* gameObject = gameObjects->values[i];

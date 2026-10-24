@@ -1,5 +1,8 @@
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
 #include "GlobalNamespace/MirroredObstacleController.hpp"
 #include "GlobalNamespace/ObstacleController.hpp"
@@ -27,7 +30,7 @@ MAKE_HOOK_MATCH(MirroredObstacleController_Mirror, &MirroredObstacleController::
 
 MAKE_HOOK_MATCH(MirroredObstacleController_UpdatePositionAndRotation,
                 &MirroredObstacleController::UpdatePositionAndRotation, void, MirroredObstacleController* self) {
-  // static auto *customObstacleDataClass = classof(CustomJSONData::CustomObstacleData *);
+  // static auto *customObstacleDataClass = i2c::class_of<CustomJSONData::CustomObstacleData *>();
   // if (self->followedObstacle && self->followedObstacle->_obstacleData->klass == customObstacleDataClass) {
   if (Hooks::isNoodleHookEnabled()) {
     self->set_hide(true);

@@ -1,8 +1,9 @@
+#include <functional>
 #include "Animation/ParentObject.h"
 
 #include "AssociatedData.h"
 #include "NELogger.h"
-#include "beatsaber-hook/shared/utils/il2cpp-type-check.hpp"
+#include "beatsaber-hook/shared/types.hpp"
 
 #include <utility>
 #include <array>
@@ -11,7 +12,10 @@
 #include "GlobalNamespace/BeatmapObjectSpawnController.hpp"
 #include "GlobalNamespace/BeatmapObjectSpawnController.hpp"
 #include "GlobalNamespace/StaticBeatmapObjectSpawnMovementData.hpp"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
 
 #include "NECaches.h"
 
@@ -128,10 +132,7 @@ void ParentObject::AssignTrack(ParentTrackEventData const& parentTrackEventData)
   GameObject* parentGameObject = GameObject::New_ctor(ParentName);
   ParentObject* instance = parentGameObject->AddComponent<ParentObject*>();
 
-  static auto get_transform =
-      il2cpp_utils::il2cpp_type_check::FPtrWrapper<&UnityEngine::GameObject::get_transform>::get();
-
-  instance->origin = get_transform(parentGameObject);
+  instance->origin = parentGameObject->get_transform();
   instance->track = parentTrackEventData.parentTrack;
   instance->worldPositionStays = parentTrackEventData.worldPositionStays;
 
@@ -162,7 +163,7 @@ void ParentObject::AssignTrack(ParentTrackEventData const& parentTrackEventData)
     NELogger::Logger.debug("Reparenting {} from {} to {}", track.GetGameObjects().size(), track.GetName(),
                            parentTrackEventData.parentTrack.GetName());
     for (auto gameObject : track.GetGameObjects()) {
-      instance->ParentToObject(get_transform(gameObject));
+      instance->ParentToObject(gameObject->get_transform());
     }
 
     instance->childrenTracks.emplace(track);
@@ -220,30 +221,19 @@ void ParentObject::AssignTrack(ParentTrackEventData const& parentTrackEventData)
 }
 
 void ParentObject::ParentToObject(Transform* childTransform) {
-  static auto SetParent =
-      il2cpp_utils::il2cpp_type_check::FPtrWrapper<static_cast<void (Transform::*)(UnityEngine::Transform*, bool)>(
-          &UnityEngine::Transform::SetParent)>::get();
-
   childTransform->SetParent(origin, worldPositionStays);
   // SetParent(childTransform, origin, worldPositionStays);
 }
 
 void ParentObject::ResetTransformParent(Transform* transform) {
-  static auto SetParent =
-      il2cpp_utils::il2cpp_type_check::FPtrWrapper<static_cast<void (Transform::*)(UnityEngine::Transform*, bool)>(
-          &UnityEngine::Transform::SetParent)>::get();
-
-  SetParent(transform, nullptr, false);
+  transform->SetParent(nullptr, false);
 }
 
 void ParentObject::HandleGameObject(TrackW track, UnityEngine::GameObject* go, bool removed) {
-  static auto get_transform =
-      il2cpp_utils::il2cpp_type_check::FPtrWrapper<&UnityEngine::GameObject::get_transform>::get();
-
   if (removed) {
-    ResetTransformParent(get_transform(go));
+    ResetTransformParent(go->get_transform());
   } else {
-    ParentToObject(get_transform(go));
+    ParentToObject(go->get_transform());
   }
 }
 

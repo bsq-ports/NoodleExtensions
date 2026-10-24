@@ -1,12 +1,16 @@
 #include "UnityEngine/Resources.hpp"
 #include "UnityEngine/Vector3.hpp"
-#include "beatsaber-hook/shared/utils/byref.hpp"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/byref.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
 #include "GlobalNamespace/SaberMovementData.hpp"
 #include "GlobalNamespace/SaberSwingRatingCounter.hpp"
 #include "GlobalNamespace/SaberTrail.hpp"
+#include "GlobalNamespace/SaberType.hpp"
 #include "GlobalNamespace/BladeMovementDataElement.hpp"
 #include "GlobalNamespace/PlayerTransforms.hpp"
 #include "GlobalNamespace/Saber.hpp"
@@ -14,7 +18,10 @@
 #include "UnityEngine/GameObject.hpp"
 #include "UnityEngine/Transform.hpp"
 
-#include "beatsaber-hook/shared/utils/typedefs-wrappers.hpp"
+#include "beatsaber-hook/shared/safeptr.hpp"
+#include "beatsaber-hook/shared/arrayw.hpp"
+#include "beatsaber-hook/shared/listw.hpp"
+#include "beatsaber-hook/shared/stringw.hpp"
 #include "custom-json-data/shared/CustomBeatmapData.h"
 
 #include "NEHooks.h"
@@ -26,14 +33,14 @@ using namespace GlobalNamespace;
 using namespace UnityEngine;
 
 static std::unordered_map<GlobalNamespace::IBladeMovementData*, GlobalNamespace::SaberMovementData*> _worldMovementData;
-static SafePtrUnity<Transform> _origin;
+static safe_ptr<Transform*> _origin;
 
 void CheckOrigin() {
   if (_origin) return;
 
   // CustomModels breaks player transforms and thus we have to check if origin is valid before using it
   // https://github.com/bsq-ports/NoodleExtensions/issues/110
-  auto playerTransform = Resources::FindObjectsOfTypeAll<PlayerTransforms*>()->FirstOrDefault();
+  auto playerTransform = Resources::FindObjectsOfTypeAll<PlayerTransforms*>().front_or_default();
   if (!playerTransform) {
     NELogger::Logger.warn("PlayerTransforms not found, cannot apply SaberPlayerMovementFix");
     return;
@@ -67,8 +74,8 @@ bool containsValue(SaberMovementData* data) {
 }
 
 MAKE_HOOK_MATCH(SaberMovementData_ComputeAdditionalData, &SaberMovementData::ComputeAdditionalData, void,
-                SaberMovementData* self, Vector3 topPos, Vector3 bottomPos, int idxOffset, ByRef<Vector3> segmentNormal,
-                ByRef<float> segmentAngle) {
+                SaberMovementData* self, Vector3 topPos, Vector3 bottomPos, int idxOffset, by_ref<Vector3> segmentNormal,
+                by_ref<float> segmentAngle) {
   if (!Hooks::isNoodleHookEnabled() || NECaches::hasLocalSpaceTrail || !NECaches::hasPlayerTransfrom) {
     return SaberMovementData_ComputeAdditionalData(self, topPos, bottomPos, idxOffset, segmentNormal, segmentAngle);
   }
@@ -83,12 +90,12 @@ MAKE_HOOK_MATCH(SaberMovementData_ComputeAdditionalData, &SaberMovementData::Com
     Sombrero::FastVector3 bottomPos2 = ComputeWorld(self->_data[num2].bottomPos);
     Sombrero::FastVector3 topPos3 = ComputeWorld(self->_data[num3].topPos);
     Sombrero::FastVector3 bottomPos3 = ComputeWorld(self->_data[num3].bottomPos);
-    segmentNormal = self->ComputePlaneNormal(topPos2, bottomPos2, topPos3, bottomPos3);
-    segmentAngle = Sombrero::FastVector3::Angle(topPos3 - bottomPos3, topPos2 - bottomPos2);
+    *segmentNormal = self->ComputePlaneNormal(topPos2, bottomPos2, topPos3, bottomPos3);
+    *segmentAngle = Sombrero::FastVector3::Angle(topPos3 - bottomPos3, topPos2 - bottomPos2);
     return SaberMovementData_ComputeAdditionalData(self, topPos, bottomPos, idxOffset, segmentNormal, segmentAngle);
   }
-  segmentNormal = Sombrero::FastVector3::zero();
-  segmentAngle = 0.0f;
+  *segmentNormal = Sombrero::FastVector3::zero();
+  *segmentAngle = 0.0f;
 }
 
 MAKE_HOOK_MATCH(SaberSwingRatingCounter_ProcessNewData, &SaberSwingRatingCounter::ProcessNewData, void,
@@ -156,19 +163,19 @@ MAKE_HOOK_MATCH(SaberMovementData_AddNewData, &SaberMovementData::AddNewData, vo
 }
 
 MAKE_HOOK_MATCH(SaberTrail_Setup, &SaberTrail::Setup, void, SaberTrail* self, Color color,
-                IBladeMovementData* movementData) {
+                IBladeMovementData* movementData, SaberType saberType) {
   if (!Hooks::isNoodleHookEnabled() || !NECaches::hasPlayerTransfrom)
-    return SaberTrail_Setup(self, color, movementData);
+    return SaberTrail_Setup(self, color, movementData, saberType);
 
   if (NECaches::hasLocalSpaceTrail) {
     CheckOrigin();
     self->_trailRenderer->transform->SetParent(_origin->parent, false);
-    return SaberTrail_Setup(self, color, movementData);
+    return SaberTrail_Setup(self, color, movementData, saberType);
   }
 
   auto worldMovementData = SaberMovementData::New_ctor();
   _worldMovementData[movementData] = worldMovementData;
-  SaberTrail_Setup(self, color, worldMovementData->i___GlobalNamespace__IBladeMovementData());
+  SaberTrail_Setup(self, color, worldMovementData->i___GlobalNamespace__IBladeMovementData(), saberType);
 }
 
 void InstallSaberPlayerMovementFixHooks() {

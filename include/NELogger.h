@@ -1,7 +1,7 @@
 
 #pragma once
-#include "beatsaber-hook/shared/utils/logging.hpp"
-#include "beatsaber-hook/shared/config/rapidjson-utils.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/rapidjson.hpp"
 
 namespace NoodleExtensions {
 static inline const std::u16string REQUIREMENTNAME = u"Noodle Extensions";

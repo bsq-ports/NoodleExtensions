@@ -1,6 +1,9 @@
 #include "NELogger.h"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
 #include "UnityEngine/Bounds.hpp"
 #include "UnityEngine/Transform.hpp"
@@ -28,12 +31,12 @@ static bool BoundsNullCheck(ObstacleController* obstacleController) {
     return true;
   }
 
-  auto customObstacleData = il2cpp_utils::try_cast<CustomJSONData::CustomObstacleData>(obstacleController->_obstacleData);
+  auto customObstacleData = i2c::try_cast<CustomJSONData::CustomObstacleData*>(obstacleController->_obstacleData);
   if (!customObstacleData) {
     return false;
   }
 
-  auto const& ad = getAD(customObstacleData.value()->customData);
+  auto const& ad = getAD(customObstacleData->customData);
   return ad.objectData.fake.value_or(false);
 }
 

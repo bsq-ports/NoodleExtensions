@@ -5,7 +5,7 @@
 #include "UnityEngine/Quaternion.hpp"
 #include "UnityEngine/Vector3.hpp"
 
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 #include "custom-json-data/shared/CustomBeatmapData.h"
 #include "custom-json-data/shared/CustomEventData.h"
 #include "custom-types/shared/register.hpp"
@@ -48,7 +48,7 @@ void CustomEventCallback(BeatmapCallbacksController* callbackController,
       // fail safe, idek why this needs to be done smh
       // CJD you bugger
       if (!ad.parsed) {
-        auto* customBeatmapData = il2cpp_utils::cast<CustomJSONData::CustomBeatmapData>(callbackController->_beatmapData);
+        auto* customBeatmapData = i2c::cast<CustomJSONData::CustomBeatmapData*>(callbackController->_beatmapData);
         TracksAD::BeatmapAssociatedData& beatmapAD = TracksAD::getBeatmapAD(customBeatmapData->customData);
         auto v2 = customBeatmapData->v2orEarlier;
         LoadNoodleEvent(beatmapAD, customEventData, v2);

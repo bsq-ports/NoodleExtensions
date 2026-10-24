@@ -1,5 +1,8 @@
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
 #include "GlobalNamespace/BeatmapDataMirrorTransform.hpp"
 #include "GlobalNamespace/BeatmapEventTypeExtensions.hpp"
@@ -19,7 +22,7 @@ using namespace GlobalNamespace;
   //    for (auto beatmapEventData :
   //    VList(reinterpret_cast<System::Collections::Generic::List_1<CustomJSONData::CustomBeatmapEventData*>*>(newBeatmap->get_beatmapEventsData())))
   //    {
-  //        static auto CustomBeatmapEventDataKlass = classof(CustomJSONData::CustomBeatmapEventData*);
+  //        static auto CustomBeatmapEventDataKlass = i2c::class_of<CustomJSONData::CustomBeatmapEventData*>();
   //
   //        if (!BeatmapEventTypeExtensions::Rot(beatmapEventData->type) || beatmapEventData->klass !=
   //        CustomBeatmapEventDataKlass)

@@ -1,3 +1,4 @@
+#include "beatsaber-hook/shared/safeptr.hpp"
 #pragma once
 
 #include "Animation/PlayerTrack.h"
@@ -48,8 +49,8 @@ DECLARE_CLASS_CODEGEN_INTERFACES(NoodleExtensions, NoodleMovementDataProvider, S
 public:
   DECLARE_SIMPLE_DTOR();
   
-  SafePtr<GlobalNamespace::VariableMovementDataProvider> original;
-  SafePtr<GlobalNamespace::BeatmapObjectSpawnMovementData> beatmapObjectSpawnMovementData;
+  safe_ptr<GlobalNamespace::VariableMovementDataProvider*> original;
+  safe_ptr<GlobalNamespace::BeatmapObjectSpawnMovementData*> beatmapObjectSpawnMovementData;
   float noteJumpStartBeatOffset;
   float oneBeatDuration;
   GlobalNamespace::BeatmapObjectSpawnMovementData::NoteJumpValueType noteJumpValueType;

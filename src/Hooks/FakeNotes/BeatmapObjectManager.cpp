@@ -1,6 +1,9 @@
-#include "beatsaber-hook/shared/utils/byref.hpp"
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/byref.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
 #include "GlobalNamespace/NoteCutCoreEffectsSpawner.hpp"
 #include "GlobalNamespace/BeatmapObjectManager.hpp"
@@ -26,25 +29,25 @@ MAKE_HOOK_MATCH(HandleNoteControllerNoteWasMissed, &BeatmapObjectManager::Handle
 }
 
 // lazy
-// static Il2CppType const* NoteCutInfoT(ByRef<NoteCutInfo> info) {
-//   return il2cpp_utils::il2cpp_type_check::il2cpp_no_arg_type<ByRef<NoteCutInfo>>::get();
-//   //    return il2cpp_utils::il2cpp_type_check::il2cpp_arg_type<ByRef<NoteCutInfo>>::get(info);
+// static Il2CppType const* NoteCutInfoT(by_ref<NoteCutInfo const> info) {
+//   return il2cpp_utils::il2cpp_type_check::il2cpp_no_arg_type<by_ref<NoteCutInfo const>>::get();
+//   //    return il2cpp_utils::il2cpp_type_check::il2cpp_arg_type<by_ref<NoteCutInfo const>>::get(info);
 // }
 
 // // GlobalNamespace::NoteCutCoreEffectsSpawner::
 // void HandleNoteWasCut(NoteCutCoreEffectsSpawner* self, GlobalNamespace::NoteController* noteController,
-//                       ByRef<GlobalNamespace::NoteCutInfo> noteCutInfo) {
+//                       by_ref<GlobalNamespace::NoteCutInfo const> noteCutInfo) {
 //   static auto ___internal__logger =
 //       ::Logger::get().WithContext("GlobalNamespace::NoteCutCoreEffectsSpawner::HandleNoteWasCut");
 //   static auto* ___internal__method = THROW_UNLESS((::il2cpp_utils::FindMethod(
 //       self, "HandleNoteWasCut", std::vector<Il2CppClass*>{},
 //       ::std::vector<Il2CppType const*>{ ::il2cpp_utils::ExtractType(noteController), ::NoteCutInfoT(noteCutInfo) })));
-//   ::il2cpp_utils::RunMethodRethrow<void, false>(self, ___internal__method, noteController, byref(noteCutInfo));
+//   ::i2c::run_method<void>(self, ___internal__method, noteController, by_ref(noteCutInfo));
 // }
 
 MAKE_HOOK_MATCH(BeatmapObjectManager_HandleNoteControllerNoteWasCut,
                 &BeatmapObjectManager::HandleNoteControllerNoteWasCut, void, BeatmapObjectManager* self,
-                GlobalNamespace::NoteController* noteController, ByRef<GlobalNamespace::NoteCutInfo> noteCutInfo) {
+                GlobalNamespace::NoteController* noteController, by_ref<GlobalNamespace::NoteCutInfo const> noteCutInfo) {
   if (!Hooks::isNoodleHookEnabled())
     return BeatmapObjectManager_HandleNoteControllerNoteWasCut(self, noteController, noteCutInfo);
 
@@ -63,10 +66,10 @@ MAKE_HOOK_MATCH(BeatmapObjectManager_HandleNoteControllerNoteWasCut,
 
   CRASH_UNLESS(*noteCutCoreEffectsSpawner);
   //        NELogger::Logger.debug("note %p %p extract type %p", &noteCutInfo.heldRef,
-  //        &classof(GlobalNamespace::NoteCutInfo)->this_arg, NoteCutInfoT(noteCutInfo));
+  //        &i2c::class_of<GlobalNamespace::NoteCutInfo>()->this_arg, NoteCutInfoT(noteCutInfo));
   //        NELogger::Logger.debug("no arg %p arg %p",
-  //        il2cpp_utils::il2cpp_type_check::il2cpp_no_arg_type<ByRef<NoteCutInfo>>::get(),
-  //        il2cpp_utils::il2cpp_type_check::il2cpp_arg_type<ByRef<NoteCutInfo>>::get(noteCutInfo));
+  //        il2cpp_utils::il2cpp_type_check::il2cpp_no_arg_type<by_ref<NoteCutInfo const>>::get(),
+  //        il2cpp_utils::il2cpp_type_check::il2cpp_arg_type<by_ref<NoteCutInfo const>>::get(noteCutInfo));
   // HandleNoteWasCut(*noteCutCoreEffectsSpawner, noteController, noteCutInfo);
   noteCutCoreEffectsSpawner.value()->HandleNoteWasCut(noteController, noteCutInfo);
   self->Despawn(noteController);

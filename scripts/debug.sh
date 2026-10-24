@@ -18,7 +18,7 @@ adb shell am force-stop com.beatgames.beatsaber
 adb forward tcp:42069 tcp:42069
 
 # Start game
-adb shell am start com.beatgames.beatsaber/com.unity3d.player.UnityPlayerActivity
+adb shell am start com.beatgames.beatsaber/com.unity3d.player.UnityPlayerGameActivity
 
 # Wait for game process to start and mods to load
 sleep 7

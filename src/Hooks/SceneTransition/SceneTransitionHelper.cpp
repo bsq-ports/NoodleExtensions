@@ -1,10 +1,14 @@
-#include "beatsaber-hook/shared/utils/il2cpp-utils.hpp"
+#include "beatsaber-hook/shared/api.hpp"
+#include "beatsaber-hook/shared/members.hpp"
+#include "beatsaber-hook/shared/types.hpp"
+#include "beatsaber-hook/shared/utils.hpp"
 #include "custom-json-data/shared/CustomBeatmapData.h"
-#include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "beatsaber-hook/shared/hooking.hpp"
 
-#include "GlobalNamespace/StandardLevelScenesTransitionSetupDataSO.hpp"
+#include "GlobalNamespace/StandardLevelScenesTransitionSetupData.hpp"
 #include "GlobalNamespace/BeatmapLineData.hpp"
 #include "GlobalNamespace/PlayerSpecificSettings.hpp"
+#include "GlobalNamespace/BeatmapCharacteristicExtensions.hpp"
 
 #include "Animation/ParentObject.h"
 #include "tracks/shared/Animation/PointDefinition.h"
@@ -36,7 +40,7 @@ using namespace CustomJSONData;
 void SceneTransitionHelper::Patch(SongCore::SongLoader::CustomBeatmapLevel* beatmapLevel,
                                   GlobalNamespace::BeatmapKey key, GlobalNamespace::EnvironmentInfoSO* environment,
                                   PlayerSpecificSettings* playerSpecificSettings) {
-  NECaches::LeftHandedMode = playerSpecificSettings->leftHanded;
+  NECaches::LeftHandedMode = playerSpecificSettings && playerSpecificSettings->leftHanded;
 
   if (beatmapLevel == nullptr) return;
 
@@ -48,7 +52,7 @@ void SceneTransitionHelper::Patch(SongCore::SongLoader::CustomBeatmapLevel* beat
 
   NELogger::Logger.debug("Getting Characteristic and diff");
 
-  auto diff = customSaveInfo.value().get().TryGetCharacteristicAndDifficulty(key.beatmapCharacteristic->serializedName,
+  auto diff = customSaveInfo.value().get().TryGetCharacteristicAndDifficulty(BeatmapCharacteristicExtensions::SerializedName(key.characteristic),
                                                                              key.difficulty);
 
   if (!diff) return;
@@ -77,8 +81,8 @@ void SceneTransitionHelper::Patch(SongCore::SongLoader::CustomBeatmapLevel* beat
 
   ParentController::OnDestroy();
 
-  static auto* customObstacleDataClass = classof(CustomJSONData::CustomObstacleData*);
-  static auto* customNoteDataClass = classof(CustomJSONData::CustomNoteData*);
+  static auto* customObstacleDataClass = i2c::class_of<CustomJSONData::CustomObstacleData*>();
+  static auto* customNoteDataClass = i2c::class_of<CustomJSONData::CustomNoteData*>();
   //
   //    if (difficultyBeatmap) {
   //        auto *beatmapData = reinterpret_cast<CustomBeatmapData *>(difficultyBeatmap->get_beatmapData());

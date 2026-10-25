@@ -15,6 +15,7 @@
 #include "GlobalNamespace/IReadonlyBeatmapData.hpp"
 #include "GlobalNamespace/BeatmapLevel.hpp"
 #include "GlobalNamespace/BeatmapBasicData.hpp"
+#include "System/Threading/Tasks/Task.hpp"
 
 #include "Zenject/DiContainer.hpp"
 
@@ -24,6 +25,18 @@
 #include <memory>
 
 using namespace GlobalNamespace;
+
+MAKE_HOOK_MATCH(GameplayCoreSceneSetupData_LoadTransformedBeatmapDataAsync,
+                &GameplayCoreSceneSetupData::LoadTransformedBeatmapDataAsync, System::Threading::Tasks::Task*,
+                GameplayCoreSceneSetupData* self) {
+  if (Hooks::isNoodleHookEnabled()) {
+    // 1.45 caches transformed data, including Noodle's mutable track state.
+    // Rebuild it for every run, as 1.40 did, so restarts/replays start clean.
+    self->_enableBeatmapDataCaching = false;
+    NELogger::Logger.debug("Rebuilding Noodle beatmap data for this gameplay run");
+  }
+  return GameplayCoreSceneSetupData_LoadTransformedBeatmapDataAsync(self);
+}
 
 MAKE_HOOK_MATCH(InstallBindings, &GameplayCoreInstaller::InstallBindings, void, GameplayCoreInstaller* self) {
   if (!Hooks::isNoodleHookEnabled()) return InstallBindings(self);
@@ -70,6 +83,7 @@ MAKE_HOOK_MATCH(InstallBindings, &GameplayCoreInstaller::InstallBindings, void, 
 }
 
 void InstallGameplayCoreInstallerHooks() {
+  INSTALL_HOOK(NELogger::Logger, GameplayCoreSceneSetupData_LoadTransformedBeatmapDataAsync);
   INSTALL_HOOK(NELogger::Logger, InstallBindings);
 }
 

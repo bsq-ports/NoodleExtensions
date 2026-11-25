@@ -231,7 +231,7 @@ MAKE_HOOK_MATCH(SliderMovement_ManualUpdate, &SliderMovement::ManualUpdate, void
 		self->_tailDidMovePastCutMarkReported = true;
 		if (self->tailDidMovePastCutMarkEvent)
       self->tailDidMovePastCutMarkEvent->Invoke();
-	} if (self->_movementEndReported && normalizedTailTime > 0.75f) {
+	} if (!self->_movementEndReported && normalizedTailTime > 0.75f) {
 		self->_movementEndReported = true;
 		if (self->movementDidFinishEvent)
       self->movementDidFinishEvent->Invoke();

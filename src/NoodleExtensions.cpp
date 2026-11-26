@@ -25,6 +25,27 @@ SafePtr<GlobalNamespace::BeatmapObjectSpawnController::InitData> NECaches::InitD
 SafePtr<GlobalNamespace::BeatmapObjectSpawnController>  NECaches::beatmapObjectSpawnController;
 std::shared_ptr<NoodleExtensions::Pool::NoodleMovementDataProviderPool> NECaches::noodleMovementDataProviderPool;
 
+void NECaches::ClearGameplayReferences() {
+  const int rootCount = int(bool(GameplayCoreContainer)) + int(bool(JumpOffsetYProvider)) +
+      int(bool(VariableMovementDataProvider)) + int(bool(InitData)) + int(bool(beatmapObjectSpawnController));
+  const bool hadPool = bool(noodleMovementDataProviderPool);
+  ClearNoteCaches();
+  ClearObstacleCaches();
+  ClearSliderCaches();
+  ClearSaberMovementCaches();
+  // Pool providers retain their original movement provider and last note/wall.
+  // Drop these only after GameCore has finished unloading and despawning.
+  noodleMovementDataProviderPool.reset();
+  beatmapObjectSpawnController = nullptr;
+  InitData = nullptr;
+  VariableMovementDataProvider = nullptr;
+  JumpOffsetYProvider = nullptr;
+  GameplayCoreContainer = nullptr;
+  hasLocalSpaceTrail = false;
+  hasPlayerTransfrom = false;
+  NELogger::Logger.info("Released GameCore references: roots={}, pool={}", rootCount, hadPool);
+}
+
 void InstallAndRegisterAll() {
   // Force load to ensure order
   auto cjdModInfo = CustomJSONData::modInfo.to_c();

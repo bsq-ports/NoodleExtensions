@@ -107,6 +107,8 @@ public:
   static void ClearObstacleCaches();
   static void ClearNoteCaches();
   static void ClearSliderCaches();
+  static void ClearSaberMovementCaches();
+  static void ClearGameplayReferences();
 
   static GlobalNamespace::CutoutEffect* GetCutout(GlobalNamespace::NoteControllerBase* nc,
                                                   NECaches::NoteCache& noteCache);

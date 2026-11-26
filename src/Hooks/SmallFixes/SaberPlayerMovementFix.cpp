@@ -28,6 +28,11 @@ using namespace UnityEngine;
 static std::unordered_map<GlobalNamespace::IBladeMovementData*, GlobalNamespace::SaberMovementData*> _worldMovementData;
 static SafePtrUnity<Transform> _origin;
 
+void NECaches::ClearSaberMovementCaches() {
+  _worldMovementData.clear();
+  _origin = nullptr;
+}
+
 void CheckOrigin() {
   if (_origin) return;
 
